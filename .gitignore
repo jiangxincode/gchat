@@ -3,3 +3,12 @@ Yahoo Messenger Protocol v9.txt
 *.o
 *.ppt
 *.doc
+*.db
+*.bak
+*.swp
+gchat_client/test/
+gchat_client/autom4te.cache/
+
+gchat_server/adduser
+gchat_server/gchat_server
+

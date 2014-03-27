@@ -1,8 +1,9 @@
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gif_defns.c"
 
-main()
+int main()
 {
 	int ch;
 	FILE *fp;
@@ -65,7 +66,7 @@ main()
 				char name[20], filename[25];
 				int flag = 0;
 				printf("Enter the name to be deleted : ");
-				scanf("%s", &name);
+				scanf("%s", name);
 				fp = fopen("users.db", "r");
 				fp1 = fopen("tempfile.db", "w");
 				rewind(fp);

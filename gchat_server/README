@@ -1,8 +1,37 @@
+～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 文件说明：
 	gif_defns.c
 	gchat_server.c/adduser.c
 	Makefile
 	gchat_server/adduser
-	users.db/online.db/loginid.db/loginid_as.db/loginid_off.db
+	users.db/online.db/$(loginid).db/$(loginid)_as.db/$(loginid)_off.db
 	README
-gif_defns.c:
+gif_defns.c:消息标识的定义，消息结构体定义
+
+gchat_server.c:gchat服务器端的实现
+adduser.c:gchat服务器端用于增加用户
+
+Makefile:用于编译源代码，生成可执行文件
+
+gchat_server:gchat_server.c编译出的可执行文件
+adduser：adduser.c编译出的可执行文件
+
+users.db:用户信息数据文件，该文件保存了用户的loginid和password
+online.db:在线用户数据文件，该文件保存了当前在线用户的loginid和socket信息
+$(loginid).db:用户拥有好友文件，该文件保存了当前用户所添加的好友信息
+$(loginid)_as.db:被添加为好友文件，该文件保存了有哪些用户把当前用户添加为好友
+$(loginid)_off.db:离线消息存储文件，该文件保存了其他用户发给当前用户的离线消息
+
+README:本说明文件
+～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+
+～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+使用说明：
+编译阶段：
+	(make clean)
+	make
+使用阶段：
+	./gchat_server
+	./adduser
+
+

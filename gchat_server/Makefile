@@ -5,4 +5,4 @@ ALL:$(OBJECTS)
 	$(CC) -o $@ $< -Wall -pthread
 .PHENY:clean
 clean:
-	rm -rf $(OBJECTS) *.o *.db
+	rm -rf $(OBJECTS) *.o
