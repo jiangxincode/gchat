@@ -367,9 +367,9 @@
 <widget class="GnomeAbout" id="About">
   <property name="visible">True</property>
   <property name="destroy_with_parent">False</property>
-  <property name="copyright" translatable="yes">Copyright(c) 2003 SAP</property>
+  <property name="copyright" translatable="yes">Copyright(c) 2014 jiangxin</property>
   <property name="comments" translatable="yes">A `GNOME interface' to communicate with people. </property>
-  <property name="authors">Arun Ponniah S &lt;gchat@rediffmail.com&gt;</property>
+  <property name="authors">jiangxin &lt;jiangxinnju@163.com&gt;</property>
   <property name="documenters"></property>
   <property name="translator_credits" translatable="yes">translator_credits</property>
 </widget>
