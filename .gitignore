@@ -3,6 +3,7 @@ Yahoo Messenger Protocol v9.txt
 *.o
 *.ppt
 *.doc
+*.jpeg
 *.db
 *.bak
 *.swp
