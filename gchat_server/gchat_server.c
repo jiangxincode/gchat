@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -16,9 +16,10 @@ void gif_handle_client(int);
 void gif_send_clients_contact_list(char *, int, int);
 char *gif_get_system_time();
 
-main()
+int main()
 {
-	int sockfd, client_sockfd, length;
+	int sockfd, client_sockfd;
+	socklen_t length;
 	struct sockaddr_in servAddr, cliAddr;
 	pthread_t pthd;
 
@@ -101,7 +102,7 @@ int client_sockfd;
 				users_t usr;
 				gifhdr_t *gifheaderS;	
 				int loginlength, passlength, flag;
-				char *ptr, *gifdataS, *gifbufferS;
+				char *ptr, *gifbufferS;
 				FILE *usersfp;
 				// S means 'Send'. The datatypes sufficed with 'S' related to send function. 
 	
@@ -617,7 +618,7 @@ int client_sockfd;
 					omsgs_se->length = strlen(omsgs.message) + 1;
 
 					// making the read message to be old
-					if(omsgs.new = 1)
+					if(omsgs.new == 1)
 					{
 						omsgs.new = 0;
 						fseek(offlinefp, -(sizeof(offline_msgs_t)), SEEK_CUR);
@@ -806,7 +807,7 @@ int type;
 
 char *gif_get_system_time()
 {
-	time_t *cal_t;
+	time_t *cal_t = 0;
 	struct tm *split_t;
 	char *sys_date;
 

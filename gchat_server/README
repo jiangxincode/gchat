@@ -1,0 +1,8 @@
+文件说明：
+	gif_defns.c
+	gchat_server.c/adduser.c
+	Makefile
+	gchat_server/adduser
+	users.db/online.db/loginid.db/loginid_as.db/loginid_off.db
+	README
+gif_defns.c:
