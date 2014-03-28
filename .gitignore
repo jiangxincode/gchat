@@ -7,6 +7,9 @@ Yahoo Messenger Protocol v9.txt
 *.db
 *.bak
 *.swp
+*.rar
+*.zip
+*.tar
 gchat_client/test/
 gchat_client/autom4te.cache/
 
