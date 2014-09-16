@@ -28,7 +28,8 @@ int main()
 		perror("Cannot create socket");
 		exit(0);
 	}
-	
+	int on = 1;
+	setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_port = htons(SERVER_PORT);
 	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
