@@ -1,9 +1,11 @@
+#include "main.h"
 #include "gif_defns.h"
 #include "support.h"
+#include "user_handle.h"
 
 int main()
 {
-	adduser();
+	user_handle();
 	int sockfd, client_sockfd;
 	socklen_t length;
 	struct sockaddr_in server_addr, client_addr;
