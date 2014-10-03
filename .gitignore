@@ -1,18 +1,10 @@
-MSN Messenger Service 1.0 Protocol.txt
-Yahoo Messenger Protocol v9.txt
-*.o
-*.ppt
-*.doc
-*.jpeg
-*.db
-*.bak
-*.swp
-*.rar
-*.zip
-*.tar
-gchat_client/test/
-gchat_client/autom4te.cache/
+client/bin/
+client/obj/
 
-gchat_server/adduser
-gchat_server/gchat_server
+server/bin/
+server/obj/
 
+*.cbp
+*.depend
+*.layout
+*~
