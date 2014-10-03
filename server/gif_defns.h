@@ -20,7 +20,6 @@
 #define GIF_ERROR_DELETE_CONTACTS_NOT_A_CONTACT 105	//用户离线
 #define GIF_ERROR_DELETE_CONTACTS_NOT_A_MEMBER 106	//无指定用户
 
-
 // ginterface header
 //
 typedef struct _gifhdr_t
@@ -62,7 +61,7 @@ typedef struct _user_contacts_t
 // ginterface, user status structure
 //
 typedef struct _user_status_t
-{	
+{
 	char loginid[20];
 	unsigned int status;
 }user_status_t;
@@ -99,3 +98,7 @@ typedef struct _contacts_chat_window_id_t
         unsigned int window_open;	//used as boolean variable(opened or not)
         struct _contacts_chat_window_id_t *next;
 } contacts_chat_window_id_t;
+
+#define HEADER_LENGTH 32 //the length of the gif_hdr_t
+#define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
+#define SERVER_PORT 9028

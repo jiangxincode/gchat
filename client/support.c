@@ -76,4 +76,3 @@ GdkPixbuf* create_pixbuf(const gchar *filename)
         g_free (pathname);
         return pixbuf;
 }
-
