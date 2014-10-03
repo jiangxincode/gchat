@@ -89,3 +89,13 @@ typedef struct _offline_msgs_send_t
 	unsigned int length;
 }offline_msgs_send_t;
 
+
+// ginterface, the structure used in the linked list to maintain the individual contact person's window id
+//
+typedef struct _contacts_chat_window_id_t
+{
+        char contacts_name[20];
+        unsigned int window_id;
+        unsigned int window_open;	//used as boolean variable(opened or not)
+        struct _contacts_chat_window_id_t *next;
+} contacts_chat_window_id_t;

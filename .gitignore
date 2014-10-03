@@ -1,3 +1,5 @@
+db/
+log/
 client/bin/
 client/obj/
 

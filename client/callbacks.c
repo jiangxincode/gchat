@@ -2,7 +2,7 @@
 #include "support.h"
 #include "callbacks.h"
 #include "interface.h"
-#include "gif_defns.h"
+#include "../gif_defns.h"
 
 #define SERVER_PORT 9028
 
