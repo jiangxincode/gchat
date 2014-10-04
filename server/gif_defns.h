@@ -102,3 +102,4 @@ typedef struct _contacts_chat_window_id_t
 #define HEADER_LENGTH 32 //the length of the gif_hdr_t
 #define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
 #define SERVER_PORT 9028
+#define NAME_LANGTH 20

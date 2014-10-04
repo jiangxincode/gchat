@@ -1,46 +1,54 @@
 #include "main.h"
-#include "user_handle.h"
 #include "gif_defns.h"
+#include "main.h"
 
-extern char *path;
 extern char pathname[MAX_PATH_LENGTH];
 
+/**
+添加用户
+*/
 int add_user()
 {
 	FILE *fp;
 	users_t usr;
-	printf("Enter the name to be added : ");
-	scanf("%s",usr.loginid);
-	printf("Enter the password : ");
-	scanf("%s",usr.password);
+	printf("Enter the name to be added : \n");
+	if((scanf("%s",usr.loginid)) == EOF)
+	{
+		fprintf(stderr,"No Users\n");
+		return 0;
+	}
+	printf("Enter the password : \n");
+	if((scanf("%s",usr.password)) == EOF)
+	{
+		fprintf(stderr,"No Users\n");
+		return 0;
+	}
 
-	strcpy(pathname,path);
-	strcat(pathname,"users.db");
-
-	fp = fopen(pathname,"a");
-	fwrite(&usr, sizeof(users_t), 1, fp);
+	get_full_path_name(pathname,NULL,"users.db");
+	if(is_exist(pathname,usr.loginid) == 1) //用户已存在
+        {
+                fprintf(stderr,"User exists\n");
+                return 0;
+        }
+	if((fp = fopen(pathname,"a")) == NULL) //打开文件错误
+        {
+                fprintf(stderr,"%s",strerror(errno));
+                return 0;
+        }
+	fwrite(&usr, sizeof(users_t), 1, fp); //添加用户
 	fclose(fp);
-
-	strcpy(pathname,path);
-	strcat(pathname, usr.loginid);
-	strcat(pathname, ".db");
 
 	// creating a file for the new user for storing his contacts list.
+	get_full_path_name(pathname,usr.loginid,".db");
 	fp = fopen(pathname, "w");
 	fclose(fp);
-
-	strcpy(pathname,path);
-	strcat(pathname,usr.loginid);
-	strcat(pathname, "_as.db");
 
 	// creating a file for the new user for storing the list of users who has this user as their contact.
+	get_full_path_name(pathname,usr.loginid,"_as.db");
 	fp = fopen(pathname, "w");
 	fclose(fp);
 
-	strcpy(pathname,path);
-	strcat(pathname,usr.loginid);
-	strcat(pathname, "_off.db");
-
+	get_full_path_name(pathname,usr.loginid,"_off.db");
 	fp = fopen(pathname, "w");
 	fclose(fp);
 	return 0;
@@ -50,12 +58,24 @@ int display_user()
 {
 	FILE *fp;
 	users_t usr;
-	printf("\nAvailable Names :");
-	fp = fopen("users.db","r");
+	get_full_path_name(pathname,NULL,"users.db");
+
+	int temp = is_exist(pathname,NULL);
+	if((temp == -1) || (temp == 0))
+        {
+                fprintf(stderr,"No Users\n");
+                return 0;
+        }
+        fprintf(stderr,"Available Names :\n");
+        if((fp=fopen(pathname,"r")) == NULL) //打开错误
+        {
+                return 0;
+        }
 	while((fread(&usr, sizeof(users_t), 1, fp)) == 1)
-		printf("\n%s",usr.loginid);
+        {
+                printf("%s\n",usr.loginid);
+        }
 	fclose(fp);
-	printf("\n");
 	return 0;
 }
 
@@ -63,49 +83,58 @@ int delete_user()
 {
 	FILE *fp;
 	users_t usr;
-	FILE *fp1;
-	char name[20], filename[25];
+	FILE *fp_temp;
+	char name[NAME_LANGTH];
+	char pathname_temp[MAX_PATH_LENGTH];
 	int flag = 0;
-	printf("Enter the name to be deleted : ");
-	scanf("%s", name);
-	fp = fopen("users.db", "r");
-	fp1 = fopen("tempfile.db", "w");
-	rewind(fp);
+	printf("Enter the name to be deleted : \n");
+	if((scanf("%s",name)) == EOF)
+	{
+		fprintf(stderr,"%s",strerror(errno));
+		return 0;
+	}
+	get_full_path_name(pathname,NULL,"users.db");
+	if((fp=fopen(pathname,"r")) == NULL)
+        {
+                fprintf(stderr,"No Users\n");
+                return 0;
+        }
+	get_full_path_name(pathname_temp,NULL,"tempfile.db");
+	if((fp_temp=fopen(pathname_temp,"w"))== NULL)
+        {
+                fprintf(stderr,"%s",strerror(errno));
+                return 0;
+        }
 	while((fread(&usr, sizeof(users_t), 1, fp)) == 1)
 	{
 		if((strcmp(usr.loginid, name)) != 0)
-			fwrite(&usr, sizeof(users_t), 1, fp1);
+			fwrite(&usr, sizeof(users_t), 1, fp_temp);
 		else
 			flag = 1;
 	}
-	fclose(fp1);
+	fclose(fp_temp);
 	fclose(fp);
-	remove("users.db");
-	rename("tempfile.db", "users.db");
+	remove(pathname);
+	rename(pathname_temp, pathname);
 	if(flag ==1)
 	{
-		strcpy(filename, name);
-		strcat(filename, ".db");
-		remove(filename);
+		get_full_path_name(pathname,name,".db");
+		remove(pathname);
 
-		strcpy(filename, name);
-		strcat(filename, "_as.db");
-		remove(filename);
+		get_full_path_name(pathname,name,"_as.db");
+		remove(pathname);
 
-		strcpy(filename, name);
-		strcat(filename, "_off.db");
-		remove(filename);
-
-		printf("Deleted!!\n");
+		get_full_path_name(pathname,name,"_off.db");
+		remove(pathname);
+		printf("Deleted\n");
 	}
 	else
 		printf("The name you entered does not exist\n");
-		return 0;
+	return 0;
 }
 int user_handle()
 {
-int ch;
-
+	int ch;
 	while(1)
 	{
 		printf("Select an option :\n");
@@ -113,8 +142,13 @@ int ch;
 		printf("\t2 . Display\n");
 		printf("\t3 . Delete\n");
 		printf("\t4 . Exit\n");
+		printf("\t5 . Go on\n");
 		printf("Enter your choice : ");
-		scanf("%d", &ch);
+		if((scanf("%d",&ch)) == EOF)
+		{
+			perror("error: in scanf");
+			exit(1);
+		}
 		switch(ch)
 		{
 		case 1:
@@ -129,7 +163,7 @@ int ch;
 		case 4:
 			exit(0);
 		default:
-			printf("Sorry. Enter the correct choice.\n");
+			return 0;
 		}
 	}
 }

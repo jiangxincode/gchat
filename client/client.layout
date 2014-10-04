@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="main.h" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="support.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="296" topLine="3" />
+			<Cursor1 position="1768" topLine="47" />
+		</Cursor>
+	</File>
+	<File name="interface.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="34349" topLine="54" />
+		</Cursor>
+	</File>
+	<File name="callbacks.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="320" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="401" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="gif_defns.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2647" topLine="88" />
+		</Cursor>
+	</File>
+	<File name="callbacks.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="440" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="97" topLine="2" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

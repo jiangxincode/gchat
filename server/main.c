@@ -1,7 +1,5 @@
 #include "main.h"
 #include "gif_defns.h"
-#include "support.h"
-#include "user_handle.h"
 
 int main()
 {

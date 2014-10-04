@@ -25,18 +25,29 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-lpthread" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="gchat_server.c">
+		<Linker>
+			<Add option="-lpthread" />
+		</Linker>
+		<Unit filename="gif_defns.h" />
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="gif_defns.c">
+		<Unit filename="main.h" />
+		<Unit filename="support.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="support.h" />
+		<Unit filename="user_handle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user_handle.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

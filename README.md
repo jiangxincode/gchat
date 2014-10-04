@@ -22,6 +22,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 * Version 0.01-0.XX 2013年完成初步框架。
 * Version 1.01 重新开始完善，重组了软件构架，清理了不必要文件，增强了系统鲁棒性，代码等可读性。
+* Version 1.02 重新组织了程序结构，主要集中在服务器方面，修复了服务器端用户等添加删除等的潜在bug。
 
 
 将要修复等问题：
