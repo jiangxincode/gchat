@@ -1,6 +1,5 @@
 #include "main.h"
 #include "gif_defns.h"
-#include "main.h"
 
 extern char pathname[MAX_PATH_LENGTH];
 
@@ -20,7 +19,7 @@ void gif_handle_client(int client_sockfd)
 
 		if(rcv_status == -1)
 		{
-			perror("error: recv");
+			_DEBUG("recv error");
 			pthread_cancel(pthd);
 			return;
 		}
@@ -56,7 +55,7 @@ void gif_handle_client(int client_sockfd)
 
 			if(usersfp == NULL)
 			{
-				perror("error: open users.db");
+				_DEBUG("error: open users.db");
 				pthread_cancel(pthd);
 				return;
 			}
@@ -104,7 +103,7 @@ void gif_handle_client(int client_sockfd)
 				onlinefp = fopen(pathname, "a+");
 				if(onlinefp == NULL)
 				{
-					perror("error: open online.db");
+					_DEBUG("error: open online.db");
 					pthread_cancel(pthd);
 					return;
 				}
@@ -123,7 +122,7 @@ void gif_handle_client(int client_sockfd)
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
-					perror("error: _as.db");
+					_DEBUG("error: _as.db");
 					pthread_cancel(pthd);
 					return;
 				}
@@ -160,7 +159,7 @@ void gif_handle_client(int client_sockfd)
 
 				if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 				{
-					perror("error:send GIF_SUCCESS_N_ERROR_MSG");
+					_DEBUG("error:send GIF_SUCCESS_N_ERROR_MSG");
 				}
 
 				free(gifbufferS);
@@ -185,7 +184,7 @@ void gif_handle_client(int client_sockfd)
 			contactsfp = fopen(pathname, "a");
 			if(contactsfp == NULL)
 			{
-				perror("error: open .db");
+				_DEBUG("error: open .db");
 				pthread_cancel(pthd);
 				return;
 			}
@@ -193,7 +192,7 @@ void gif_handle_client(int client_sockfd)
 			usersfp = fopen("users.db", "r");
 			if(usersfp == NULL)
 			{
-				perror("error:open users.db");
+				_DEBUG("error:open users.db");
 				pthread_cancel(pthd);
 				return;
 			}
@@ -219,7 +218,7 @@ void gif_handle_client(int client_sockfd)
 				as_contactfp = fopen(pathname, "a");
 				if(as_contactfp == NULL)
 				{
-					perror("error: open _as.db");
+					_DEBUG("error: open _as.db");
 					pthread_cancel(pthd);
 					return;
 				}
@@ -253,7 +252,7 @@ void gif_handle_client(int client_sockfd)
 
 			if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 			{
-				perror("error: send GIF_SUCCESS_N_ERROR_MSG");
+				_DEBUG("error: send GIF_SUCCESS_N_ERROR_MSG");
 			}
 
 			free(gifbufferS);
@@ -285,7 +284,7 @@ void gif_handle_client(int client_sockfd)
 			usersfp = fopen(pathname, "r");
 			if(usersfp == NULL)
 			{
-				perror("A user's contact file");
+				_DEBUG("A user's contact file");
 				pthread_cancel(pthd);
 				return;
 			}
@@ -303,7 +302,7 @@ void gif_handle_client(int client_sockfd)
 			contactsfp = fopen(pathname, "r");
 			if(contactsfp == NULL)
 			{
-				perror("A user's contact file");
+				_DEBUG("A user's contact file");
 				pthread_cancel(pthd);
 				return;
 			}
@@ -332,7 +331,7 @@ void gif_handle_client(int client_sockfd)
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
-					perror("A user's as_contact file");
+					_DEBUG("A user's as_contact file");
 					exit(0);
 				}
 
@@ -397,7 +396,7 @@ void gif_handle_client(int client_sockfd)
 
 			if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 			{
-				perror("Cannot send message(AddContacts)");
+				_DEBUG("Cannot send message(AddContacts)");
 			}
 
 			free(gifbufferS);
@@ -411,7 +410,7 @@ void gif_handle_client(int client_sockfd)
 			break;
 		}
 
-		case 6: //GIF_CHAT_MSG
+		case GIF_CHAT_MSG:
 		{
 			char *gifbufferS;
 			online_users_t ousr;
@@ -419,11 +418,13 @@ void gif_handle_client(int client_sockfd)
 			int receiving_client_sockfd;
 			int flag = 0;
 
-			onlinefp = fopen("online.db", "r");
-			if(onlinefp == NULL)
+			get_full_path_name(pathname,NULL,"online.db");
+
+			if((onlinefp = fopen(pathname, "r")) == NULL)
 			{
-				perror("online.db");
-				exit(0);
+
+				pthread_cancel(pthd);
+				return;
 			}
 
 			// retreving the socket file descriptor for the receiving client from the online.db file
@@ -447,7 +448,7 @@ void gif_handle_client(int client_sockfd)
 
 				if((send(receiving_client_sockfd, gifbufferS, (32 + gifheader->length), 0)) < 0)
 				{
-					perror("Message passing error");
+					_DEBUG("Message passing error");
 				}
 
 				free(gifbufferS);
@@ -463,7 +464,7 @@ void gif_handle_client(int client_sockfd)
 				omsgs.new = 1;
 
 				// setting the system date and time to the char pointer variable 'dateserial'(DD MMM YYYY  HH:MM)
-				dateserial = gif_get_system_time();
+				dateserial = get_system_time();
 				strcpy(omsgs.dateserial, dateserial);
 
 				strcpy(filename, gifheader->receiver);
@@ -471,7 +472,7 @@ void gif_handle_client(int client_sockfd)
 				offlinefp = fopen(filename, "a");
 				if(offlinefp == NULL)
 				{
-					perror("Offline Messages file");
+					_DEBUG("Offline Messages file");
 					exit(0);
 				}
 
@@ -489,7 +490,7 @@ void gif_handle_client(int client_sockfd)
 			break;
 		}
 
-		case 7: //GIF_DISCONNECT_MSG
+		case GIF_DISCONNECT_MSG:
 		{
 			online_users_t ousr;
 			user_contacts_t usrc;
@@ -518,7 +519,7 @@ void gif_handle_client(int client_sockfd)
 			as_contactfp = fopen(filename, "r");
 			if(as_contactfp == NULL)
 			{
-				perror("A user's as_contact file");
+				_DEBUG("A user's as_contact file");
 				exit(0);
 			}
 
@@ -544,7 +545,7 @@ void gif_handle_client(int client_sockfd)
 			break;
 		}
 
-		case 9: // GIF_OFFLINE_REQUEST_MSG
+		case GIF_OFFLINE_REQUEST_MSG:
 		{
 			gifhdr_t *gifheaderS;
 			char *gifdataS, *gifbufferS, filename[30];
@@ -559,7 +560,7 @@ void gif_handle_client(int client_sockfd)
 			strcat(filename, "_off.db");
 			if((offlinefp = fopen(filename, "r+")) == NULL)
 			{
-				perror("A user's offline messages file");
+				_DEBUG("A user's offline messages file");
 				exit(0);
 			}
 
@@ -606,7 +607,7 @@ void gif_handle_client(int client_sockfd)
 
 					if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 					{
-						perror("Error sending Offline Messages");
+						_DEBUG("Error sending Offline Messages");
 					}
 
 					free(gifbufferS);
@@ -634,7 +635,7 @@ void gif_handle_client(int client_sockfd)
 
 			if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 			{
-				perror("Error sending Offline Messages");
+				_DEBUG("Error sending Offline Messages");
 			}
 
 			free(gifbufferS);
@@ -649,7 +650,7 @@ void gif_handle_client(int client_sockfd)
 			break;
 		}
 
-		case 11: // GIF_OFFLINE_DELETE_MSG
+		case GIF_OFFLINE_DELETE_MSG:
 		{
 			offline_msgs_t omsgs;
 			FILE *offlinefp, *newfp;
@@ -700,14 +701,14 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 	contactsfp = fopen(filename,"r");
 	if(contactsfp == NULL)
 	{
-		perror("A user's contacts file");
+		_DEBUG("A user's contacts file");
 		exit(0);
 	}
 
 	onlinefp = fopen("online.db", "r");
 	if(onlinefp == NULL)
 	{
-		perror("online.db");
+		_DEBUG("online.db");
 		exit(0);
 	}
 
@@ -751,7 +752,7 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 
 	if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 	{
-		perror("Error sending message(Address list)");
+		_DEBUG("Error sending message(Address list)");
 	}
 
 	free(usrs);

@@ -224,8 +224,7 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 	//initialising the server details
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_port = htons(SERVER_PORT);
-	inet_pton(AF_INET, gtk_entry_get_text(GTK_ENTRY(servip)),
-	          &servAddr.sin_addr);
+	inet_pton(AF_INET, gtk_entry_get_text(GTK_ENTRY(servip)),&servAddr.sin_addr);
 
 	//create socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -236,8 +235,7 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 		return;
 	}
 	//connect to the server
-	if((connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr)))
-	                < 0)
+	if((connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr)))< 0)
 	{
 		errormsg = strerror(errno);
 		gtk_widget_show(create_msgbox("error", errormsg));
@@ -250,8 +248,7 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 	strcpy(gifheaderS->receiver, "server");
 	gifheaderS->reserved = 0;
 
-	gifdataS =
-	        (char *) malloc(strlen(gtk_entry_get_text(GTK_ENTRY(loginid))) +
+	gifdataS =(char *) malloc(strlen(gtk_entry_get_text(GTK_ENTRY(loginid))) +
 	                        strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 5);
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(loginid)));
 	strcat(gifdataS, "#*&");
@@ -272,8 +269,7 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 	free(gifdataS);
 	free(gifbufferS);
 
-	if(pthread_create
-	                (&pthd, NULL, (void *) gif_receive_messages, (void *) &sockfd) != 0)
+	if(pthread_create(&pthd, NULL, (void *) gif_receive_messages, (void *) &sockfd) != 0)
 	{
 		errormsg = strerror(errno);
 		gtk_widget_show(create_msgbox("error", errormsg));
@@ -283,9 +279,7 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 	gtk_widget_destroy(authen);
 }
 
-void
-gif_receive_messages(server_sockfd)
-int server_sockfd;
+void gif_receive_messages(int server_sockfd)
 {
 	gifhdr_t *gifheader;
 	int rcv_status;
