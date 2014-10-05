@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1412493787 source:/home/jiangxin/temp/gchat/client/callbacks.c
+1412499928 source:/home/jiangxin/temp/gchat/client/callbacks.c
 	"../common/common.h"
 	"support.h"
 	"callbacks.h"
@@ -2994,30 +2994,33 @@
 	<gdk/gdk.h>
 	<libgnome/gnome-url.h>
 
-1412493894 /home/jiangxin/temp/gchat/client/support.h
+1412508489 /home/jiangxin/temp/gchat/client/support.h
 
-1412493786 /home/jiangxin/temp/gchat/client/callbacks.h
+1412499250 /home/jiangxin/temp/gchat/client/callbacks.h
 
 1412294563 /home/jiangxin/temp/gchat/client/interface.h
 
 1412473524 /home/jiangxin/temp/gchat/client/gif_defns.h
 
-1412493894 source:/home/jiangxin/temp/gchat/client/interface.c
+1412507848 source:/home/jiangxin/temp/gchat/client/interface.c
 	"../common/common.h"
 	"support.h"
 	"callbacks.h"
 	"interface.h"
 
-1412475763 source:/home/jiangxin/temp/gchat/client/main.c
+1412505718 source:/home/jiangxin/temp/gchat/client/main.c
 	"../common/common.h"
+	"support.h"
+	"callbacks.h"
 	"interface.h"
-	"support.h"
 
-1412475798 source:/home/jiangxin/temp/gchat/client/support.c
+1412508489 source:/home/jiangxin/temp/gchat/client/support.c
 	"../common/common.h"
 	"support.h"
+	"callbacks.h"
+	"interface.h"
 
-1412480374 /home/jiangxin/temp/gchat/common/common.h
+1412507675 /home/jiangxin/temp/gchat/common/common.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -3034,6 +3037,12 @@
 	<pthread.h>
 	<gnome.h>
 
-1412477733 source:/home/jiangxin/temp/gchat/common/common.c
+1412507675 source:/home/jiangxin/temp/gchat/common/common.c
 	"common.h"
+
+1412498742 source:/home/jiangxin/temp/gchat/client/gif_handle.c
+	"../common/common.h"
+	"support.h"
+	"callbacks.h"
+	"interface.h"
 

@@ -33,3 +33,5 @@ void display(char *gifbuffer)
         display_header(gifheader);
         fprintf(stderr,"%s\n",(gifbuffer+HEADER_LENGTH));
 }
+
+

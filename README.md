@@ -34,6 +34,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * Version 1.06
     * 解决文件当前目录的问题。
     * 解决pathname的多线程争用问题
+* Version 1.07
+    * 增加图标
 
 
 将要修复等问题：
@@ -43,6 +45,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 减少服务器端对用户信息等处理，提高自动化
 解决用户处理过程中等海量用户处理问题
 解决服务器端用户添加界面问题
+
+
 
 <img src="" />
 

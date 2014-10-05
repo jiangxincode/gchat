@@ -1,15 +1,9 @@
 #include "../common/common.h"
-#include "interface.h"
 #include "support.h"
+#include "callbacks.h"
+#include "interface.h"
 
-GtkWidget *gifmain;
-
-gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-        gtk_main_quit ();
-        return (FALSE);
-}
-
+extern GtkWidget *gifmain;
 
 int main (int argc, char *argv[])
 {

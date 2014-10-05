@@ -1,4 +1,20 @@
-void gif_receive_messages(void *server);	// actually the messages are received from the server
+enum
+{
+	CONTACTS_COLUMN_TEXT,
+	STATUS_COLUMN_PIXMAP
+};
+
+enum
+{
+	OFFLINE_NEW_PIXMAP,
+	OFFLINE_SENDER_TEXT,
+	OFFLINE_DATESERIAL_TEXT,
+	OFFLINE_MSG_TEXT,
+	OFFLINE_COLUMNS
+};
+
+gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data);
+
 void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
 void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
 

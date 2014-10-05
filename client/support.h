@@ -1,3 +1,8 @@
+
+
+void gif_receive_messages(void *server);	// actually the messages are received from the server
+
+
 /*
  * Public Functions.
  */

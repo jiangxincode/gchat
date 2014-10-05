@@ -1,10 +1,10 @@
 db/
 log/
-client/bin/
-client/obj/
+client/bin/*
+client/obj/*
 
-server/bin/
-server/obj/
+server/bin/*
+server/obj/*
 
 *.cbp
 *.depend

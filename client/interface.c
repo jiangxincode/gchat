@@ -87,17 +87,19 @@ GtkWidget *scrolledwindow4;
 GtkWidget* create_gifclient (void)
 {
         GtkWidget *gifclient;
-        GtkWidget *toolbar1;
+        GtkWidget *toolbar;
         GtkWidget *tmp_toolbar_icon;
-        GtkWidget *butConnect;
-        GtkWidget *butAdd;
-        GtkWidget *butConf;
-        GtkWidget *butOffline;
-        GtkWidget *appbar1;
+        GtkWidget *butConnect,*butAdd, *butConf, *butOffline;
+        GtkWidget *appbar;
+        char pathname[MAX_PATH_LENGTH];
 
-        gifclient = gnome_app_new ("gchat", _("gchat"));
+        gifclient = gnome_app_new ("gchat", "gchat");
         gtk_window_set_position (GTK_WINDOW (gifclient), GTK_WIN_POS_CENTER);
         gtk_window_set_default_size (GTK_WINDOW (gifclient), 205, 400);
+
+        strcpy(pathname,COMMON_PATH_PREFIX);
+        strcat(pathname,"client/pixmaps/icon.png");
+        gtk_window_set_icon(GTK_WINDOW(gifclient), create_pixbuf(pathname));
 
         gnome_app_create_menus (GNOME_APP (gifclient), menubar1_uiinfo);
         gtk_widget_set_sensitive (conn_menu_uiinfo[1].widget, FALSE);
@@ -105,54 +107,54 @@ GtkWidget* create_gifclient (void)
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[1].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[3].widget, FALSE);
 
-        toolbar1 = gtk_toolbar_new ();
-        gtk_widget_show (toolbar1);
-        gnome_app_add_toolbar (GNOME_APP (gifclient), GTK_TOOLBAR (toolbar1), "toolbar1",
+        toolbar = gtk_toolbar_new ();
+        gtk_widget_show (toolbar);
+        gnome_app_add_toolbar (GNOME_APP (gifclient), GTK_TOOLBAR (toolbar), "toolbar",
                                BONOBO_DOCK_ITEM_BEH_EXCLUSIVE,
                                BONOBO_DOCK_TOP, 1, 0, 0);
-        gtk_container_set_border_width (GTK_CONTAINER (toolbar1), 1);
-        gtk_toolbar_set_style (GTK_TOOLBAR (toolbar1), GTK_TOOLBAR_BOTH);
+        gtk_container_set_border_width (GTK_CONTAINER (toolbar), 1);
+        gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
 
-        tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-jump-to", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar1)));
-        butConnect = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+        tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-jump-to", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+        butConnect = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                         GTK_TOOLBAR_CHILD_BUTTON,
                         NULL,
                         _("C_onn"),
                         _("Connect to the server"), NULL,
                         tmp_toolbar_icon, NULL, NULL);
-        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar1)->children)->data))->label), TRUE);
+        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
         gtk_widget_show (butConnect);
 
-        tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar1)));
-        butAdd = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+        tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+        butAdd = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                              GTK_TOOLBAR_CHILD_BUTTON,
                                              NULL,
                                              _("_Add"),
                                              _("Add new contacts"), NULL,
                                              tmp_toolbar_icon, NULL, NULL);
-        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar1)->children)->data))->label), TRUE);
+        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
         gtk_widget_show (butAdd);
         gtk_widget_set_sensitive (butAdd, FALSE);
 
-        tmp_toolbar_icon = gtk_image_new_from_stock ("gnome-stock-scores", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar1)));
-        butConf = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+        tmp_toolbar_icon = gtk_image_new_from_stock ("gnome-stock-scores", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+        butConf = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                               GTK_TOOLBAR_CHILD_BUTTON,
                                               NULL,
                                               _("Con_f"),
                                               _("Make a conference"), NULL,
                                               tmp_toolbar_icon, NULL, NULL);
-        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar1)->children)->data))->label), TRUE);
+        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
         gtk_widget_show (butConf);
         gtk_widget_set_sensitive (butConf, FALSE);
 
-        tmp_toolbar_icon = gtk_image_new_from_stock ("gnome-stock-mail", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar1)));
-        butOffline = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+        tmp_toolbar_icon = gtk_image_new_from_stock ("gnome-stock-mail", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+        butOffline = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                         GTK_TOOLBAR_CHILD_BUTTON,
                         NULL,
                         _("Off_line"),
                         _("View offline messages"), NULL,
                         tmp_toolbar_icon, NULL, NULL);
-        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar1)->children)->data))->label), TRUE);
+        gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
         gtk_widget_show (butOffline);
         gtk_widget_set_sensitive (butOffline, FALSE);
 
@@ -161,9 +163,9 @@ GtkWidget* create_gifclient (void)
         gnome_app_set_contents (GNOME_APP (gifclient), scrolledwindow1);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-        appbar1 = gnome_appbar_new (TRUE, TRUE, GNOME_PREFERENCES_NEVER);
-        gtk_widget_show (appbar1);
-        gnome_app_set_statusbar (GNOME_APP (gifclient), appbar1);
+        appbar = gnome_appbar_new (TRUE, TRUE, GNOME_PREFERENCES_NEVER);
+        gtk_widget_show (appbar);
+        gnome_app_set_statusbar (GNOME_APP (gifclient), appbar);
 
         gnome_app_install_menu_hints (GNOME_APP (gifclient), menubar1_uiinfo);
         gtk_signal_connect (GTK_OBJECT (butConnect), "clicked",
@@ -193,13 +195,13 @@ GtkWidget* create_gifclient (void)
         GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[3].widget, "mnuOffline");
         GLADE_HOOKUP_OBJECT (gifclient, menubar1_uiinfo[2].widget, "mnuHelp");
         GLADE_HOOKUP_OBJECT (gifclient, mnuHelp_menu_uiinfo[0].widget, "mnuAbout");
-        GLADE_HOOKUP_OBJECT (gifclient, toolbar1, "toolbar1");
+        GLADE_HOOKUP_OBJECT (gifclient, toolbar, "toolbar");
         GLADE_HOOKUP_OBJECT (gifclient, butConnect, "butConnect");
         GLADE_HOOKUP_OBJECT (gifclient, butAdd, "butAdd");
         GLADE_HOOKUP_OBJECT (gifclient, butConf, "butConf");
         GLADE_HOOKUP_OBJECT (gifclient, butOffline, "butOffline");
         GLADE_HOOKUP_OBJECT (gifclient, scrolledwindow1, "scrolledwindow1");
-        GLADE_HOOKUP_OBJECT (gifclient, appbar1, "appbar1");
+        GLADE_HOOKUP_OBJECT (gifclient, appbar, "appbar");
 
         return gifclient;
 }
