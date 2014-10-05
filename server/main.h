@@ -5,7 +5,7 @@
  */
 
 
-void gif_handle_client(int);
+void gif_handle_client(void *client);
 void gif_send_clients_contact_list(char *, int, int);
 char *get_system_time();
 int get_full_path_name(char *full_path_name, char *id_path, char *filename);

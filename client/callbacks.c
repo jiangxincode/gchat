@@ -3,9 +3,7 @@
 #include "callbacks.h"
 #include "interface.h"
 
-void gif_receive_messages(int);	// actually the messages are received from the server
-static void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
-static void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
+
 
 extern GtkWidget *gifmain;
 extern GtkWidget *scrolledwindow1;
@@ -177,8 +175,7 @@ void on_butOffline_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_butCancel_clicked(GtkButton * button, gpointer user_data)
+void on_butCancel_clicked(GtkButton * button, gpointer user_data)
 {
 	gtk_widget_destroy(authen);
 }
@@ -236,18 +233,18 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	strcpy(gifheaderS->receiver, "server"); //mark
 	gifheaderS->reserved = 0;
 
+
 	gifdataS =(char *) malloc(strlen(gtk_entry_get_text(GTK_ENTRY(loginid))) +
-	                          strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 5);
+	                          strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 4);
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(loginid)));
 	strcat(gifdataS, "#*&");
 	strcat(gifdataS, gtk_entry_get_text(GTK_ENTRY(password)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
+
 	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
 	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
 	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
-
-	perror("here");
 
 	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
@@ -269,8 +266,9 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	gtk_widget_destroy(authen);
 }
 
-void gif_receive_messages(int server_sockfd)
+void gif_receive_messages(void *server)
 {
+	int server_sockfd = *(int *)server;
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer, *errormsg;
@@ -833,7 +831,7 @@ void gif_receive_messages(int server_sockfd)
 	}
 }
 
-static void
+void
 gif_select_offline_messages(GtkTreeSelection * selection, gpointer data)
 {
 	if(gtk_tree_selection_get_selected
@@ -846,7 +844,7 @@ gif_select_offline_messages(GtkTreeSelection * selection, gpointer data)
 }
 
 
-static void
+void
 gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data)
 {
 	contacts_chat_window_id_t *ptr;

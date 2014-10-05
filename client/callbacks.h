@@ -1,3 +1,7 @@
+void gif_receive_messages(void *server);	// actually the messages are received from the server
+void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
+void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
+
 void
 on_mnuConnect_activate(GtkMenuItem     *menuitem,
                        gpointer         user_data);

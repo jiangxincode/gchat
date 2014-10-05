@@ -4,8 +4,10 @@
 
 extern char pathname[MAX_PATH_LENGTH];
 
-void gif_handle_client(int client_sockfd)
+void gif_handle_client(void *client)
 {
+        int client_sockfd = *(int *)client;
+	fprintf(stderr,"in thread: %d\n",client_sockfd); //mark
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer;
@@ -17,6 +19,7 @@ void gif_handle_client(int client_sockfd)
 	{
 		gifbuffer = (char *) malloc(1024);
 		rcv_status = recv(client_sockfd, gifbuffer, 1024, 0);
+		display(gifbuffer);
 
 		if(rcv_status == -1)
 		{

@@ -28,11 +28,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     * 增加common文件夹，将client和server同时需要的文件进行合并处理
     * 将gif_defns.h中的内容移到common.h，并因此重组了部分软件结构
     * 增加void display(gifhdr_t header)函数，用来debug
+* Version 1.05
+    * 变更display函数和display_header函数
+    * 修复错误的描述符问题问题。
 
 
 将要修复等问题：
 错误信息定位问题
-错误的描述符问题
 用户密码保密问题
 减少服务器端对用户信息等处理，提高自动化
 解决用户处理过程中等海量用户处理问题
