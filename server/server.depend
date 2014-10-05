@@ -1,16 +1,60 @@
 # depslib dependency file v1.0
-1412499928 source:/home/jiangxin/temp/gchat/client/callbacks.c
-	"../common/common.h"
-	"support.h"
-	"callbacks.h"
-	"interface.h"
+1395990315 source:/home/jiangxin/temp/gchat/server/gchat_server.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<sys/socket.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<netdb.h>
+	<pthread.h>
+	<time.h>
+	"gif_defns.c"
 
-1412321040 /home/jiangxin/temp/gchat/client/main.h
+1395757473 /home/jiangxin/temp/gchat/server/gif_defns.c
+
+1395757473 source:/home/jiangxin/temp/gchat/server/gif_defns.c
+
+1395757473 source:/home/jiangxin/temp/gchat/server/gif_defns.h
+
+1412495157 source:/home/jiangxin/temp/gchat/server/main.c
+	"../common/common.h"
+	"main.h"
+
+1412424185 /home/jiangxin/temp/gchat/server/gif_defns.h
+
+1412339471 /home/jiangxin/temp/gchat/server/support.h
+
+1412507675 source:/home/jiangxin/temp/gchat/server/support.c
+	"../common/common.h"
+	"main.h"
+	"main.h"
+
+1412314579 /home/jiangxin/temp/gchat/gif_defns.h
+
+1412337698 source:/home/jiangxin/temp/gchat/server/adduser.c
+	"support.h"
+	"gif_defns.h"
+
+1412507675 /home/jiangxin/temp/gchat/server/main.h
+
+1412339777 /home/jiangxin/temp/gchat/server/user_handle.h
+
+1412497739 source:/home/jiangxin/temp/gchat/server/user_handle.c
+	"../common/common.h"
+	"main.h"
+
+1412497670 source:/home/jiangxin/temp/gchat/server/gif_handle.c
+	"../common/common.h"
+	"main.h"
+
+1412507675 /home/jiangxin/temp/gchat/common/common.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdio.h>
 	<errno.h>
+	<time.h>
 	<unistd.h>
 	<sys/stat.h>
 	<sys/types.h>
@@ -2994,55 +3038,6 @@
 	<gdk/gdk.h>
 	<libgnome/gnome-url.h>
 
-1412508489 /home/jiangxin/temp/gchat/client/support.h
-
-1412499250 /home/jiangxin/temp/gchat/client/callbacks.h
-
-1412294563 /home/jiangxin/temp/gchat/client/interface.h
-
-1412473524 /home/jiangxin/temp/gchat/client/gif_defns.h
-
-1412509281 source:/home/jiangxin/temp/gchat/client/interface.c
-	"../common/common.h"
-	"support.h"
-	"callbacks.h"
-	"interface.h"
-
-1412505718 source:/home/jiangxin/temp/gchat/client/main.c
-	"../common/common.h"
-	"support.h"
-	"callbacks.h"
-	"interface.h"
-
-1412508633 source:/home/jiangxin/temp/gchat/client/support.c
-	"../common/common.h"
-	"support.h"
-	"callbacks.h"
-	"interface.h"
-
-1412507675 /home/jiangxin/temp/gchat/common/common.h
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<stdio.h>
-	<errno.h>
-	<time.h>
-	<unistd.h>
-	<sys/stat.h>
-	<sys/types.h>
-	<sys/socket.h>
-	<netinet/in.h>
-	<arpa/inet.h>
-	<netdb.h>
-	<pthread.h>
-	<gnome.h>
-
 1412507675 source:/home/jiangxin/temp/gchat/common/common.c
 	"common.h"
-
-1412498742 source:/home/jiangxin/temp/gchat/client/gif_handle.c
-	"../common/common.h"
-	"support.h"
-	"callbacks.h"
-	"interface.h"
 

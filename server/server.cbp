@@ -31,11 +31,16 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="`pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`" />
 		</Compiler>
 		<Linker>
 			<Add option="-lpthread" />
+			<Add option="`pkg-config  libgnome-2.0 libgnomeui-2.0 –libs`" />
 		</Linker>
-		<Unit filename="gif_defns.h" />
+		<Unit filename="../common/common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../common/common.h" />
 		<Unit filename="gif_handle.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -37,11 +37,14 @@
 			<Add option="`pkg-config gtk+-2.0 --libs`" />
 			<Add option="`pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`" />
 		</Linker>
+		<Unit filename="../common/common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../common/common.h" />
 		<Unit filename="callbacks.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="callbacks.h" />
-		<Unit filename="gif_defns.h" />
 		<Unit filename="interface.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -49,7 +52,6 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.h" />
 		<Unit filename="support.c">
 			<Option compilerVar="CC" />
 		</Unit>

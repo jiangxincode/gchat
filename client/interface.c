@@ -61,7 +61,7 @@ static GnomeUIInfo mnuHelp_menu_uiinfo[] =
         GNOMEUIINFO_END
 };
 
-static GnomeUIInfo menubar1_uiinfo[] =
+static GnomeUIInfo menubar_uiinfo[] =
 {
         {
                 GNOME_APP_UI_SUBTREE, N_("_Conn"),
@@ -101,7 +101,7 @@ GtkWidget* create_gifclient (void)
         strcat(pathname,"client/pixmaps/icon.png");
         gtk_window_set_icon(GTK_WINDOW(gifclient), create_pixbuf(pathname));
 
-        gnome_app_create_menus (GNOME_APP (gifclient), menubar1_uiinfo);
+        gnome_app_create_menus (GNOME_APP (gifclient), menubar_uiinfo);
         gtk_widget_set_sensitive (conn_menu_uiinfo[1].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[0].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[1].widget, FALSE);
@@ -167,7 +167,7 @@ GtkWidget* create_gifclient (void)
         gtk_widget_show (appbar);
         gnome_app_set_statusbar (GNOME_APP (gifclient), appbar);
 
-        gnome_app_install_menu_hints (GNOME_APP (gifclient), menubar1_uiinfo);
+        gnome_app_install_menu_hints (GNOME_APP (gifclient), menubar_uiinfo);
         gtk_signal_connect (GTK_OBJECT (butConnect), "clicked",
                             GTK_SIGNAL_FUNC (on_butConnect_clicked),
                             NULL);
@@ -183,17 +183,17 @@ GtkWidget* create_gifclient (void)
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
         GLADE_HOOKUP_OBJECT_NO_REF (gifclient, gifclient, "gifclient");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar1_uiinfo[0].widget, "conn");
+        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[0].widget, "conn");
         GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[0].widget, "mnuConnect");
         GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[1].widget, "mnuDisconect");
         GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[2].widget, "separator1");
         GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[3].widget, "mnuQuit");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar1_uiinfo[1].widget, "mnuContacts");
+        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[1].widget, "mnuContacts");
         GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[0].widget, "mnuAdd");
         GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[1].widget, "mnuDelete");
         GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[2].widget, "separator2");
         GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[3].widget, "mnuOffline");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar1_uiinfo[2].widget, "mnuHelp");
+        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[2].widget, "mnuHelp");
         GLADE_HOOKUP_OBJECT (gifclient, mnuHelp_menu_uiinfo[0].widget, "mnuAbout");
         GLADE_HOOKUP_OBJECT (gifclient, toolbar, "toolbar");
         GLADE_HOOKUP_OBJECT (gifclient, butConnect, "butConnect");
