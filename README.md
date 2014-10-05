@@ -31,11 +31,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * Version 1.05
     * 变更display函数和display_header函数
     * 修复错误的描述符问题问题。
+* Version 1.06
+    * 解决文件当前目录的问题。
+    * 解决pathname的多线程争用问题
 
 
 将要修复等问题：
 错误信息定位问题
 用户密码保密问题
+登录界面默认信息问题
 减少服务器端对用户信息等处理，提高自动化
 解决用户处理过程中等海量用户处理问题
 解决服务器端用户添加界面问题

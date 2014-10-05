@@ -2,8 +2,6 @@
 #include "main.h"
 #include "main.h"
 
-char pathname[MAX_PATH_LENGTH];
-
 char *get_system_time()
 {
 	time_t *cal_t = 0;
@@ -20,7 +18,7 @@ char *get_system_time()
 
 int get_full_path_name(char *full_path_name, char *id_path, char *filename)
 {
-        char *prefix = "db/";
+        char *prefix = "/home/jiangxin/temp/gchat/server/db/";
         strcpy(full_path_name,prefix);
         if(id_path != NULL)
         {

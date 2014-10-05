@@ -1,17 +1,14 @@
 #include "../common/common.h"
 #include "main.h"
 
-
-extern char pathname[MAX_PATH_LENGTH];
-
 void gif_handle_client(void *client)
 {
         int client_sockfd = *(int *)client;
-	fprintf(stderr,"in thread: %d\n",client_sockfd); //mark
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer;
 	char loginid[20], password[20];
+	char pathname[MAX_PATH_LENGTH];
 
 	pthread_t pthd = pthread_self(); //获取自身等线程ID
 
@@ -19,7 +16,6 @@ void gif_handle_client(void *client)
 	{
 		gifbuffer = (char *) malloc(1024);
 		rcv_status = recv(client_sockfd, gifbuffer, 1024, 0);
-		display(gifbuffer);
 
 		if(rcv_status == -1)
 		{
@@ -56,7 +52,6 @@ void gif_handle_client(void *client)
 
 			get_full_path_name(pathname,NULL,"users.db");
 			usersfp = fopen(pathname,"r");
-
 			if(usersfp == NULL)
 			{
 				_DEBUG("error: open users.db");
@@ -99,7 +94,6 @@ void gif_handle_client(void *client)
 				online_users_t ousr;
 				user_contacts_t usrc;
 				FILE *onlinefp, *as_contactfp;
-				//char filename[30]; //mark
 
 				printf("%s - Login Correct\n", loginid);
 
@@ -461,7 +455,7 @@ void gif_handle_client(void *client)
 			{
 				FILE *offlinefp;
 				offline_msgs_t omsgs;
-				char *dateserial, filename[30];
+				char *dateserial;
 
 				strcpy(omsgs.sender, gifheader->sender);
 				strcpy(omsgs.message, gifdata);
@@ -471,9 +465,8 @@ void gif_handle_client(void *client)
 				dateserial = get_system_time();
 				strcpy(omsgs.dateserial, dateserial);
 
-				strcpy(filename, gifheader->receiver);
-				strcat(filename, "_off.db");
-				offlinefp = fopen(filename, "a");
+				get_full_path_name(pathname,gifheader->receiver,"_off.db");
+				offlinefp = fopen(pathname, "a");
 				if(offlinefp == NULL)
 				{
 					_DEBUG("Offline Messages file");
@@ -499,10 +492,12 @@ void gif_handle_client(void *client)
 			online_users_t ousr;
 			user_contacts_t usrc;
 			FILE *onlinefp, *newfp, *as_contactfp;
-			char filename[30];
+			char pathname_temp[MAX_PATH_LENGTH];
 
-			onlinefp = fopen("online.db", "r");
-			newfp = fopen("newfile.db", "w");
+			get_full_path_name(pathname,NULL,"online.db");
+			onlinefp = fopen(pathname, "r");
+			get_full_path_name(pathname_temp,NULL,"newfile.db");
+			newfp = fopen(pathname_temp, "w");
 
 			rewind(onlinefp);
 			while(fread(&ousr, sizeof(online_users_t), 1, onlinefp) == 1)
@@ -512,15 +507,14 @@ void gif_handle_client(void *client)
 			}
 			fclose(newfp);
 			fclose(onlinefp);
-			remove("online.db");
-			rename("newfile.db", "online.db");
+			remove(pathname);
+			rename(pathname_temp, pathname);
 
-			onlinefp = fopen("online.db", "r");
+			onlinefp = fopen(pathname, "r");
 
 			// coding for refresing the contacts list of clients who has this just logined client as a contact
-			strcpy(filename, gifheader->sender);
-			strcat(filename, "_as.db");
-			as_contactfp = fopen(filename, "r");
+			get_full_path_name(pathname_temp,gifheader->sender,"_as.db");
+			as_contactfp = fopen(pathname, "r");
 			if(as_contactfp == NULL)
 			{
 				_DEBUG("A user's as_contact file");
@@ -552,7 +546,7 @@ void gif_handle_client(void *client)
 		case GIF_OFFLINE_REQUEST_MSG:
 		{
 			gifhdr_t *gifheaderS;
-			char *gifdataS, *gifbufferS, filename[30];
+			char *gifdataS, *gifbufferS;
 			offline_msgs_t omsgs;
 			offline_msgs_send_t *omsgs_se;
 			FILE *offlinefp;
@@ -560,9 +554,8 @@ void gif_handle_client(void *client)
 			counter = flag = 0;
 			i = 1;
 
-			strcpy(filename, gifheader->sender);
-			strcat(filename, "_off.db");
-			if((offlinefp = fopen(filename, "r+")) == NULL)
+			get_full_path_name(pathname,gifheader->sender,"_off.db");
+			if((offlinefp = fopen(pathname, "r+")) == NULL)
 			{
 				_DEBUG("A user's offline messages file");
 				exit(0);
@@ -658,11 +651,11 @@ void gif_handle_client(void *client)
 		{
 			offline_msgs_t omsgs;
 			FILE *offlinefp, *newfp;
-			char filename[30];
-			strcpy(filename, gifheader->sender);
-			strcat(filename, "_off.db");
-			offlinefp = fopen(filename, "r");
-			newfp = fopen("new_offline_file.db", "w");
+			char pathname_temp[MAX_PATH_LENGTH];
+			get_full_path_name(pathname,gifheader->sender,"_off.db");
+			offlinefp = fopen(pathname, "r");
+			get_full_path_name(pathname_temp,NULL,"new_offline_file.db");
+			newfp = fopen(pathname_temp, "w");
 
 			rewind(offlinefp);
 			while(fread(&omsgs, sizeof(offline_msgs_t), 1, offlinefp) == 1)
@@ -673,8 +666,8 @@ void gif_handle_client(void *client)
 			fclose(newfp);
 			fclose(offlinefp);
 
-			remove(filename);
-			rename("new_offline_file.db", filename);
+			remove(pathname);
+			rename(pathname_temp, pathname);
 
 			if(gifheader->length != 0)
 				free(gifdata);
@@ -691,25 +684,25 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 // type = 0 (sending the contacts list while normal login)
 // type = 1(sending the contacts list while refresing)
 {
+	char pathname[MAX_PATH_LENGTH];
 	gifhdr_t *gifheaderS;
 	char *gifdataS, *gifbufferS;
 	online_users_t ousr;
 	user_contacts_t usrc;
 	user_status_t *usrs;
 	FILE *contactsfp, *onlinefp;
-	char filename[25];
 	int i;
 
-	strcpy(filename,client_loginid);
-	strcat(filename,".db");
-	contactsfp = fopen(filename,"r");
+        get_full_path_name(pathname,client_loginid,".db");
+	contactsfp = fopen(pathname,"r");
 	if(contactsfp == NULL)
 	{
 		_DEBUG("A user's contacts file");
 		exit(0);
 	}
 
-	onlinefp = fopen("online.db", "r");
+        get_full_path_name(pathname,NULL,"online.db");
+	onlinefp = fopen(pathname, "r");
 	if(onlinefp == NULL)
 	{
 		_DEBUG("online.db");

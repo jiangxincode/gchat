@@ -1,8 +1,6 @@
 #include "../common/common.h"
 #include "main.h"
 
-extern char pathname[MAX_PATH_LENGTH];
-
 int user_handle()
 {
 	int ch;
@@ -48,6 +46,7 @@ int user_handle()
 */
 int add_user()
 {
+	char pathname[MAX_PATH_LENGTH];
 	FILE *fp;
 	users_t usr;
 	printf("Enter the name to be added : \n");
@@ -101,6 +100,7 @@ int add_user()
 */
 int display_user()
 {
+	char pathname[MAX_PATH_LENGTH];
 	FILE *fp;
 	users_t usr;
 	get_full_path_name(pathname,NULL,"users.db");
@@ -131,6 +131,7 @@ int display_user()
 */
 int delete_user()
 {
+	char pathname[MAX_PATH_LENGTH];
 	FILE *fp;
 	users_t usr;
 	FILE *fp_temp;
