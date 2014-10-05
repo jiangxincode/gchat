@@ -1,5 +1,4 @@
-#include "main.h"
-
+#include "../common/common.h"
 #include "interface.h"
 #include "support.h"
 

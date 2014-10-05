@@ -1,5 +1,6 @@
+#include "../common/common.h"
 #include "main.h"
-#include "gif_defns.h"
+
 
 int main()
 {

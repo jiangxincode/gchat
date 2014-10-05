@@ -1,5 +1,6 @@
-#include "main.h"
+#include "../common/common.h"
 #include "support.h"
+
 
 GtkWidget* lookup_widget(GtkWidget *widget, const gchar *widget_name)
 {

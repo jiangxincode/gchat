@@ -1,3 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+#include <time.h>
+
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <pthread.h>
+
+#include <gnome.h>
+
 // gchat macros
 //
 #define GIF_LOGIN_MSG 1			//用户登录
@@ -99,7 +117,7 @@ typedef struct _contacts_chat_window_id_t
         struct _contacts_chat_window_id_t *next;
 } contacts_chat_window_id_t;
 
-#define HEADER_LENGTH 32 //the length of the gif_hdr_t
+#define HEADER_LENGTH (sizeof(gifhdr_t)) //the length of the gif_hdr_t
 #define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
 #define SERVER_PORT 9028
 #define NAME_LANGTH 20

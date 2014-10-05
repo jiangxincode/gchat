@@ -1,14 +1,11 @@
-#include "main.h"
+#include "../common/common.h"
 #include "support.h"
 #include "callbacks.h"
 #include "interface.h"
-#include "gif_defns.h"
 
 void gif_receive_messages(int);	// actually the messages are received from the server
-static void gif_call_client_for_chat(GtkTreeSelection * selection,
-                                     gpointer data);
-static void gif_select_offline_messages(GtkTreeSelection * selection,
-                                        gpointer data);
+static void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
+static void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
 
 extern GtkWidget *gifmain;
 extern GtkWidget *scrolledwindow1;
@@ -47,8 +44,7 @@ enum
 	OFFLINE_COLUMNS
 };
 
-void
-on_mnuConnect_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_mnuConnect_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	head = NULL;
 	authen = create_Authen();
@@ -56,8 +52,7 @@ on_mnuConnect_activate(GtkMenuItem * menuitem, gpointer user_data)
 }
 
 
-void
-on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *widget;
 	contacts_chat_window_id_t *ptr;
@@ -121,22 +116,19 @@ on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 }
 
 
-void
-on_mnuQuit_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_mnuQuit_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	gtk_main_quit();
 }
 
 
-void
-on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	gtk_widget_show(create_About());
 }
 
 
-void
-on_butConnect_clicked(GtkButton * button, gpointer user_data)
+void on_butConnect_clicked(GtkButton * button, gpointer user_data)
 {
 	head = NULL;
 	authen = create_Authen();
@@ -144,22 +136,19 @@ on_butConnect_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_butAdd_clicked(GtkButton * button, gpointer user_data)
+void on_butAdd_clicked(GtkButton * button, gpointer user_data)
 {
 	gtk_widget_show(create_AddContacts());
 }
 
 
-void
-on_butConf_clicked(GtkButton * button, gpointer user_data)
+void on_butConf_clicked(GtkButton * button, gpointer user_data)
 {
 	gtk_widget_show(create_msgbox("info", "Under Construction"));
 }
 
 
-void
-on_butOffline_clicked(GtkButton * button, gpointer user_data)
+void on_butOffline_clicked(GtkButton * button, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
 	char *gifbufferS, *errormsg;
@@ -195,8 +184,7 @@ on_butCancel_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_butClear_clicked(GtkButton * button, gpointer user_data)
+void on_butClear_clicked(GtkButton * button, gpointer user_data)
 {
 	GtkWidget *loginid = lookup_widget(GTK_WIDGET(button), "entUserid");
 	GtkWidget *password = lookup_widget(GTK_WIDGET(button), "entPass");
@@ -208,12 +196,12 @@ on_butClear_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_butOk_clicked(GtkButton * button, gpointer user_data)
+void on_butOk_clicked(GtkButton * button, gpointer user_data)
 {
 	pthread_t pthd;
 	gifhdr_t *gifheaderS;
 	char *gifdataS, *gifbufferS, *errormsg;
+
 	GtkWidget *loginid = lookup_widget(GTK_WIDGET(button), "entUserid");
 	GtkWidget *password = lookup_widget(GTK_WIDGET(button), "entPass");
 	GtkWidget *servip = lookup_widget(GTK_WIDGET(button), "entServip");
@@ -244,22 +232,24 @@ on_butOk_clicked(GtkButton * button, gpointer user_data)
 
 	gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
 	gifheaderS->type = GIF_LOGIN_MSG;
-	strcpy(gifheaderS->sender, gtk_entry_get_text(GTK_ENTRY(loginid)));
-	strcpy(gifheaderS->receiver, "server");
+	strcpy(gifheaderS->sender, gtk_entry_get_text(GTK_ENTRY(loginid))); //mark
+	strcpy(gifheaderS->receiver, "server"); //mark
 	gifheaderS->reserved = 0;
 
 	gifdataS =(char *) malloc(strlen(gtk_entry_get_text(GTK_ENTRY(loginid))) +
-	                        strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 5);
+	                          strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 5);
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(loginid)));
 	strcat(gifdataS, "#*&");
 	strcat(gifdataS, gtk_entry_get_text(GTK_ENTRY(password)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-	gifbufferS = (char *) malloc(32 + gifheaderS->length);
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	perror("here");
+
+	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		gtk_widget_show(create_msgbox("error", errormsg));

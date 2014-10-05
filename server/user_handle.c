@@ -1,5 +1,4 @@
-#include "main.h"
-#include "gif_defns.h"
+#include "../common/common.h"
 #include "main.h"
 
 extern char pathname[MAX_PATH_LENGTH];

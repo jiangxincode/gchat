@@ -24,6 +24,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * Version 1.01 重新开始完善，重组了软件构架，清理了不必要文件，增强了系统鲁棒性，代码等可读性。
 * Version 1.02 重新组织了程序结构，主要集中在服务器方面，修复了服务器端用户等添加删除等的潜在bug。
 * Version 1.03 对错误定位方式进行了改进。
+* Version 1.04 
+    * 增加common文件夹，将client和server同时需要的文件进行合并处理
+    * 将gif_defns.h中的内容移到common.h，并因此重组了部分软件结构
+    * 增加void display(gifhdr_t header)函数，用来debug
 
 
 将要修复等问题：
