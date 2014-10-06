@@ -43,6 +43,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * Version 1.10
     * 修复了1.09发现等bug
     * 重写了Authon窗口，使用默认值，减少了之后调试等工作量。
+* Version 1.11
+    * 重写了about窗口
 
 将要修复等问题：
 
@@ -52,6 +54,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * 减少服务器端对用户信息等处理，提高自动化
 * 解决用户处理过程中等海量用户处理问题
 * 解决服务器端用户添加界面问题
+* 作者声明
 
 待学习知识：
 

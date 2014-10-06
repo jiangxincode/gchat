@@ -192,35 +192,6 @@ GtkWidget* create_msgbox (const gchar* msg_type, const gchar* message)
         return msgbox;
 }
 
-GtkWidget* create_About (void)
-{
-        const gchar *authors[] =
-        {
-                "Tommy Zhang <nig.daemon@gmail.com>",
-                NULL
-        };
-        const gchar *documenters[] = { NULL };
-        /* TRANSLATORS: Replace this string with your names, one name per line. */
-        gchar *translators = _("translator_credits");
-        GtkWidget *About;
-
-        if (!strcmp (translators, "translator_credits"))
-                translators = NULL;
-        gchar *VERSION = "0.01";
-        About = gnome_about_new ("gchat", VERSION,
-                                 _("Copyright(c) 2003 SAP"),
-                                 _("A `GNOME chat interface' to communicate with people. "),
-                                 authors,
-                                 documenters,
-                                 translators,
-                                 NULL);
-
-        /* Store pointers to all widgets, for use by lookup_widget(). */
-        GLADE_HOOKUP_OBJECT_NO_REF (About, About, "About");
-
-        return About;
-}
-
 GtkWidget* create_Authen (void)
 {
         GtkWidget *Authen;

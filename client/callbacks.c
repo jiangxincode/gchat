@@ -103,7 +103,19 @@ void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 
 void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
-	gtk_widget_show(create_About());
+	GtkWidget *about = gtk_about_dialog_new();
+
+	char pathname[MAX_PATH_LENGTH];
+	strcpy(pathname,COMMON_PATH_PREFIX);
+	strcat(pathname,"client/pixmaps/icon.png");
+	gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG(about), create_pixbuf(pathname));
+
+	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG(about), "Version 1.10");
+	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG(about), "Copyright @ jiangxin, 2014");
+	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG(about), "https://github.com/jiangxincode");
+	gtk_dialog_run (GTK_DIALOG(about));
+	gtk_widget_destroy(about);
+
 }
 
 
