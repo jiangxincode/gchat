@@ -1,14 +1,15 @@
 *~
 *.swp
+*.cbp
+*.depend
+*.layout
+
 log/
+
 client/bin/
 client/obj/
-client/client.cbp
-client/client.depend
-client/client.layout
+
 server/bin/
 server/obj/
-server/client.cbp
-server/client.depend
-server/client.layout
+server/db/
 
