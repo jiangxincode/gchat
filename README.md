@@ -38,6 +38,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     * 增加图标
 * Version 1.08
     * 修复菜单栏不显示问题。
+* Version 1.09
+    * 精简了部分冗余代码，发现若干bugs
 
 
 将要修复等问题：

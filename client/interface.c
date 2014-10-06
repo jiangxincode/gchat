@@ -9,19 +9,19 @@
 
 static GnomeUIInfo conn_menu_uiinfo[] =
 {
-        {GNOME_APP_UI_ITEM, N_("C_onnect"), NULL, (gpointer) on_mnuConnect_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("C_onnect"), NULL, (gpointer) on_Connect, NULL, NULL, 0, NULL, 0, 0, NULL},
         {GNOME_APP_UI_ITEM, N_("_Disconnect"),NULL,(gpointer) on_mnuDisconect_activate, NULL, NULL,0, NULL,0, 0, NULL},
         GNOMEUIINFO_SEPARATOR,
-        GNOMEUIINFO_MENU_EXIT_ITEM (on_mnuQuit_activate, NULL),
+        GNOMEUIINFO_MENU_EXIT_ITEM (gtk_main_quit, NULL),
         GNOMEUIINFO_END
 };
 
 static GnomeUIInfo mnuContacts_menu_uiinfo[] =
 {
-        {GNOME_APP_UI_ITEM, N_("_Add"), NULL, (gpointer) on_mnuAdd_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("_Add"), NULL, (gpointer) on_Add, NULL, NULL, 0, NULL, 0, 0, NULL},
         {GNOME_APP_UI_ITEM, N_("_Delete"),NULL, (gpointer) on_mnuDelete_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
         GNOMEUIINFO_SEPARATOR,
-        {GNOME_APP_UI_ITEM, N_("_Offline Messages"), NULL, (gpointer) on_mnuOffline_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("_Offline Messages"), NULL, (gpointer) on_Offline, NULL, NULL, 0, NULL, 0, 0, NULL},
         GNOMEUIINFO_END
 };
 
@@ -42,33 +42,33 @@ static GnomeUIInfo menubar_uiinfo[] =
 GtkWidget *scrolledwindow1;
 GtkWidget *scrolledwindow4;
 
-GtkWidget* create_gifclient (void)
+extern GtkWidget *gifmain;
+
+GtkWidget* create_gifmain (void)
 {
-        GtkWidget *gifclient;
         GtkWidget *toolbar;
         GtkWidget *tmp_toolbar_icon;
         GtkWidget *butConnect,*butAdd, *butConf, *butOffline;
         GtkWidget *appbar;
         char pathname[MAX_PATH_LENGTH];
 
-        gifclient = gnome_app_new ("gchat", "gchat");
-        gtk_window_set_position (GTK_WINDOW (gifclient), GTK_WIN_POS_CENTER);
-        gtk_window_set_default_size (GTK_WINDOW (gifclient), 205, 400);
+        gifmain = gnome_app_new ("gchat", "gchat");
+        gtk_window_set_position (GTK_WINDOW (gifmain), GTK_WIN_POS_CENTER);
+        gtk_window_set_default_size (GTK_WINDOW (gifmain), 205, 400);
 
         strcpy(pathname,COMMON_PATH_PREFIX);
         strcat(pathname,"client/pixmaps/icon.png");
-        gtk_window_set_icon(GTK_WINDOW(gifclient), create_pixbuf(pathname));
+        gtk_window_set_icon(GTK_WINDOW(gifmain), create_pixbuf(pathname));
 
-        gnome_app_create_menus (GNOME_APP (gifclient), menubar_uiinfo);
+        gnome_app_create_menus (GNOME_APP (gifmain), menubar_uiinfo);
         gtk_widget_set_sensitive (conn_menu_uiinfo[1].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[0].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[1].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[3].widget, FALSE);
-        gtk_widget_show(gifclient);
 
         toolbar = gtk_toolbar_new ();
         gtk_widget_show (toolbar);
-        gnome_app_add_toolbar (GNOME_APP (gifclient), GTK_TOOLBAR (toolbar), "toolbar",
+        gnome_app_add_toolbar (GNOME_APP (gifmain), GTK_TOOLBAR (toolbar), "toolbar",
                                BONOBO_DOCK_ITEM_BEH_EXCLUSIVE,
                                BONOBO_DOCK_TOP, 1, 0, 0);
         gtk_container_set_border_width (GTK_CONTAINER (toolbar), 1);
@@ -119,50 +119,44 @@ GtkWidget* create_gifclient (void)
 
         scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
         gtk_widget_show (scrolledwindow1);
-        gnome_app_set_contents (GNOME_APP (gifclient), scrolledwindow1);
+        gnome_app_set_contents (GNOME_APP (gifmain), scrolledwindow1);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
         appbar = gnome_appbar_new (TRUE, TRUE, GNOME_PREFERENCES_NEVER);
         gtk_widget_show (appbar);
-        gnome_app_set_statusbar (GNOME_APP (gifclient), appbar);
+        gnome_app_set_statusbar (GNOME_APP (gifmain), appbar);
 
-        gnome_app_install_menu_hints (GNOME_APP (gifclient), menubar_uiinfo);
-        gtk_signal_connect (GTK_OBJECT (butConnect), "clicked",
-                            GTK_SIGNAL_FUNC (on_butConnect_clicked),
-                            NULL);
-        gtk_signal_connect (GTK_OBJECT (butAdd), "clicked",
-                            GTK_SIGNAL_FUNC (on_butAdd_clicked),
-                            NULL);
-        gtk_signal_connect (GTK_OBJECT (butConf), "clicked",
-                            GTK_SIGNAL_FUNC (on_butConf_clicked),
-                            NULL);
-        gtk_signal_connect (GTK_OBJECT (butOffline), "clicked",
-                            GTK_SIGNAL_FUNC (on_butOffline_clicked),
-                            NULL);
+        gnome_app_install_menu_hints (GNOME_APP (gifmain), menubar_uiinfo);
+
+        gtk_widget_show(gifmain);
+        gtk_signal_connect (GTK_OBJECT (butConnect), "clicked", G_CALLBACK (on_Connect), NULL);
+        gtk_signal_connect (GTK_OBJECT (butAdd), "clicked", G_CALLBACK (on_Add), NULL);
+        gtk_signal_connect (GTK_OBJECT (butConf), "clicked", G_CALLBACK (on_butConf_clicked), NULL);
+        gtk_signal_connect (GTK_OBJECT (butOffline), "clicked", G_CALLBACK (on_Offline), NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
-        GLADE_HOOKUP_OBJECT_NO_REF (gifclient, gifclient, "gifclient");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[0].widget, "conn");
-        GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[0].widget, "mnuConnect");
-        GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[1].widget, "mnuDisconect");
-        GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[2].widget, "separator1");
-        GLADE_HOOKUP_OBJECT (gifclient, conn_menu_uiinfo[3].widget, "mnuQuit");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[1].widget, "mnuContacts");
-        GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[0].widget, "mnuAdd");
-        GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[1].widget, "mnuDelete");
-        GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[2].widget, "separator2");
-        GLADE_HOOKUP_OBJECT (gifclient, mnuContacts_menu_uiinfo[3].widget, "mnuOffline");
-        GLADE_HOOKUP_OBJECT (gifclient, menubar_uiinfo[2].widget, "mnuHelp");
-        GLADE_HOOKUP_OBJECT (gifclient, mnuHelp_menu_uiinfo[0].widget, "mnuAbout");
-        GLADE_HOOKUP_OBJECT (gifclient, toolbar, "toolbar");
-        GLADE_HOOKUP_OBJECT (gifclient, butConnect, "butConnect");
-        GLADE_HOOKUP_OBJECT (gifclient, butAdd, "butAdd");
-        GLADE_HOOKUP_OBJECT (gifclient, butConf, "butConf");
-        GLADE_HOOKUP_OBJECT (gifclient, butOffline, "butOffline");
-        GLADE_HOOKUP_OBJECT (gifclient, scrolledwindow1, "scrolledwindow1");
-        GLADE_HOOKUP_OBJECT (gifclient, appbar, "appbar");
+        GLADE_HOOKUP_OBJECT_NO_REF (gifmain, gifmain, "gifmain");
+        GLADE_HOOKUP_OBJECT (gifmain, menubar_uiinfo[0].widget, "conn");
+        GLADE_HOOKUP_OBJECT (gifmain, conn_menu_uiinfo[0].widget, "mnuConnect");
+        GLADE_HOOKUP_OBJECT (gifmain, conn_menu_uiinfo[1].widget, "mnuDisconect");
+        GLADE_HOOKUP_OBJECT (gifmain, conn_menu_uiinfo[2].widget, "separator1");
+        GLADE_HOOKUP_OBJECT (gifmain, conn_menu_uiinfo[3].widget, "mnuQuit");
+        GLADE_HOOKUP_OBJECT (gifmain, menubar_uiinfo[1].widget, "mnuContacts");
+        GLADE_HOOKUP_OBJECT (gifmain, mnuContacts_menu_uiinfo[0].widget, "mnuAdd");
+        GLADE_HOOKUP_OBJECT (gifmain, mnuContacts_menu_uiinfo[1].widget, "mnuDelete");
+        GLADE_HOOKUP_OBJECT (gifmain, mnuContacts_menu_uiinfo[2].widget, "separator2");
+        GLADE_HOOKUP_OBJECT (gifmain, mnuContacts_menu_uiinfo[3].widget, "mnuOffline");
+        GLADE_HOOKUP_OBJECT (gifmain, menubar_uiinfo[2].widget, "mnuHelp");
+        GLADE_HOOKUP_OBJECT (gifmain, mnuHelp_menu_uiinfo[0].widget, "mnuAbout");
+        GLADE_HOOKUP_OBJECT (gifmain, toolbar, "toolbar");
+        GLADE_HOOKUP_OBJECT (gifmain, butConnect, "butConnect");
+        GLADE_HOOKUP_OBJECT (gifmain, butAdd, "butAdd");
+        GLADE_HOOKUP_OBJECT (gifmain, butConf, "butConf");
+        GLADE_HOOKUP_OBJECT (gifmain, butOffline, "butOffline");
+        GLADE_HOOKUP_OBJECT (gifmain, scrolledwindow1, "scrolledwindow1");
+        GLADE_HOOKUP_OBJECT (gifmain, appbar, "appbar");
 
-        return gifclient;
+        return gifmain;
 }
 
 GtkWidget* create_msgbox (const gchar* msg_type, const gchar* message)
@@ -399,13 +393,13 @@ GtkWidget* create_Authen (void)
         gtk_tooltips_set_tip (tooltips, butOk, _("Connect"), NULL);
 
         gtk_signal_connect (GTK_OBJECT (butCancel), "clicked",
-                            GTK_SIGNAL_FUNC (on_butCancel_clicked),
+                            G_CALLBACK (on_butCancel_clicked),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (butClear), "clicked",
-                            GTK_SIGNAL_FUNC (on_butClear_clicked),
+                            G_CALLBACK (on_butClear_clicked),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (butOk), "clicked",
-                            GTK_SIGNAL_FUNC (on_butOk_clicked),
+                            G_CALLBACK (on_butOk_clicked),
                             NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -546,13 +540,13 @@ GtkWidget* create_Chat (void)
         gtk_label_set_justify (GTK_LABEL (label8), GTK_JUSTIFY_LEFT);
 
         gtk_signal_connect (GTK_OBJECT (Chat), "destroy",
-                            GTK_SIGNAL_FUNC (on_Chat_destroy),
+                            G_CALLBACK (on_Chat_destroy),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (entInput), "activate",
-                            GTK_SIGNAL_FUNC (on_entInput_activate),
+                            G_CALLBACK (on_entInput_activate),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (butSend), "clicked",
-                            GTK_SIGNAL_FUNC (on_butSend_clicked),
+                            G_CALLBACK (on_butSend_clicked),
                             NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -656,10 +650,10 @@ GtkWidget* create_AddContacts (void)
         GTK_WIDGET_SET_FLAGS (butAddContactsOk, GTK_CAN_DEFAULT);
 
         gtk_signal_connect (GTK_OBJECT (butAddContactsCancel), "clicked",
-                            GTK_SIGNAL_FUNC (on_butAddContactsCancel_clicked),
+                            G_CALLBACK (on_butAddContactsCancel_clicked),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (butAddContactsOk), "clicked",
-                            GTK_SIGNAL_FUNC (on_butAddContactsOk_clicked),
+                            G_CALLBACK (on_butAddContactsOk_clicked),
                             NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -717,10 +711,10 @@ GtkWidget* create_Offline (void)
         GTK_WIDGET_SET_FLAGS (butOfflineClose, GTK_CAN_DEFAULT);
 
         gtk_signal_connect (GTK_OBJECT (butOfflineDelete), "clicked",
-                            GTK_SIGNAL_FUNC (on_butOfflineDelete_clicked),
+                            G_CALLBACK (on_butOfflineDelete_clicked),
                             NULL);
         gtk_signal_connect (GTK_OBJECT (butOfflineClose), "clicked",
-                            GTK_SIGNAL_FUNC (on_butOfflineClose_clicked),
+                            G_CALLBACK (on_butOfflineClose_clicked),
                             NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */

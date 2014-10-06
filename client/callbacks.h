@@ -18,29 +18,22 @@ gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data);
 void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
 void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
 
+void on_Connect(GtkWidget *button, gpointer user_data);
+void on_Add(GtkWidget *menuitem, gpointer user_data);
+
 void
-on_mnuConnect_activate(GtkMenuItem     *menuitem,
-                       gpointer         user_data);
+on_mnuDelete_activate(GtkMenuItem * menuitem, gpointer user_data);
 
 void
 on_mnuDisconect_activate(GtkMenuItem     *menuitem,
                          gpointer         user_data);
 
-void
-on_mnuQuit_activate(GtkMenuItem     *menuitem,
-                    gpointer         user_data);
 
 void
 on_mnuAbout_activate(GtkMenuItem     *menuitem,
                      gpointer         user_data);
 
-void
-on_butConnect_clicked(GtkButton       *button,
-                      gpointer         user_data);
 
-void
-on_butAdd_clicked(GtkButton       *button,
-                  gpointer         user_data);
 
 void
 on_butConf_clicked(GtkButton       *button,
@@ -90,18 +83,5 @@ void
 on_butOfflineClose_clicked(GtkButton       *button,
                            gpointer         user_data);
 
-void
-on_butOffline_clicked(GtkButton       *button,
-                      gpointer         user_data);
 
-void
-on_mnuAdd_activate(GtkMenuItem     *menuitem,
-                   gpointer         user_data);
-
-void
-on_mnuDelete_activate(GtkMenuItem     *menuitem,
-                      gpointer         user_data);
-
-void
-on_mnuOffline_activate(GtkMenuItem     *menuitem,
-                       gpointer         user_data);
+void on_Offline(GtkWidget *widget, gpointer user_data);

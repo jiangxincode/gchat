@@ -27,7 +27,7 @@ int sockfd;
 char client_loginid[25];
 int offline_messages_count;
 
-GtkWidget *gifmain;
+extern GtkWidget *gifmain;
 
 gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
@@ -35,12 +35,6 @@ gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
         return (FALSE);
 }
 
-void on_mnuConnect_activate(GtkMenuItem * menuitem, gpointer user_data)
-{
-	head = NULL;
-	authen = create_Authen();
-	gtk_widget_show(authen);
-}
 
 
 void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -107,11 +101,6 @@ void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 }
 
 
-void on_mnuQuit_activate(GtkMenuItem * menuitem, gpointer user_data)
-{
-	gtk_main_quit();
-}
-
 
 void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
@@ -119,7 +108,7 @@ void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 }
 
 
-void on_butConnect_clicked(GtkButton * button, gpointer user_data)
+void on_Connect(GtkWidget * button, gpointer user_data)
 {
 	head = NULL;
 	authen = create_Authen();
@@ -136,35 +125,6 @@ void on_butAdd_clicked(GtkButton * button, gpointer user_data)
 void on_butConf_clicked(GtkButton * button, gpointer user_data)
 {
 	gtk_widget_show(create_msgbox("info", "Under Construction"));
-}
-
-
-void on_butOffline_clicked(GtkButton * button, gpointer user_data)
-{
-	gifhdr_t *gifheaderS;
-	char *gifbufferS, *errormsg;
-
-	gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
-	gifbufferS = (char *) malloc(sizeof(gifhdr_t));
-	gifheaderS->type = GIF_OFFLINE_REQUEST_MSG;
-	gifheaderS->length = 0;
-	strcpy(gifheaderS->sender, client_loginid);
-	strcpy(gifheaderS->receiver, "server");
-	gifheaderS->reserved = 0;
-
-	memcpy(gifbufferS, gifheaderS, 32);
-
-	if((send(sockfd, gifbufferS, 32, 0)) < 0)
-	{
-		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
-	}
-
-	free(gifbufferS);
-	free(gifheaderS);
-
-	offline = create_Offline();
-	gtk_widget_show(offline);
 }
 
 
@@ -585,8 +545,7 @@ on_butOfflineClose_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_mnuAdd_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_Add(GtkWidget *menuitem, gpointer user_data)
 {
 	gtk_widget_show(create_AddContacts());
 }
@@ -603,7 +562,7 @@ on_mnuDelete_activate(GtkMenuItem * menuitem, gpointer user_data)
 
 
 void
-on_mnuOffline_activate(GtkMenuItem * menuitem, gpointer user_data)
+on_Offline(GtkWidget * widget, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
 	char *gifbufferS, *errormsg;
@@ -630,19 +589,3 @@ on_mnuOffline_activate(GtkMenuItem * menuitem, gpointer user_data)
 	offline = create_Offline();
 	gtk_widget_show(offline);
 }
-
-
-/*
-GtkWidget* create_msgbox (const gchar*, const gchar*);
-
-GtkWidget*
-create_msgbox (const gchar* msg_type, const gchar* message)
-{
-  GtkWidget *msgbox;
-  GtkWidget *dialog_vbox1;
-  GtkWidget *dialog_action_area1;
-  GtkWidget *button4;
-
-  msgbox = gnome_message_box_new (message,
-                              msg_type, NULL);
-*/
