@@ -159,37 +159,18 @@ GtkWidget* create_gifmain (void)
         return gifmain;
 }
 
-GtkWidget* create_msgbox (const gchar* msg_type, const gchar* message)
+GtkWidget* message_dialog (GtkMessageType type, const gchar* message)
 {
-        GtkWidget *msgbox;
-        GtkWidget *dialog_vbox1;
-        GtkWidget *dialog_action_area1;
-        GtkWidget *button4;
+        GtkWidget *dialog;
 
-        msgbox = gnome_message_box_new (message, msg_type, NULL);
-        gtk_window_set_title (GTK_WINDOW (msgbox), _("gchat - Message"));
-        gtk_window_set_position (GTK_WINDOW (msgbox), GTK_WIN_POS_CENTER);
-        gtk_window_set_resizable (GTK_WINDOW (msgbox), FALSE);
+        dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "%s",message);
+        gtk_window_set_title (GTK_WINDOW (dialog), "gchat - Message");
+        gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+        gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
 
-        dialog_vbox1 = GNOME_DIALOG (msgbox)->vbox;
-        gtk_widget_show (dialog_vbox1);
-
-        dialog_action_area1 = GNOME_DIALOG (msgbox)->action_area;
-        gtk_widget_show (dialog_action_area1);
-        gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
-
-        gnome_dialog_append_button (GNOME_DIALOG (msgbox), "gtk-ok");
-        button4 = GTK_WIDGET (g_list_last (GNOME_DIALOG (msgbox)->buttons)->data);
-        gtk_widget_show (button4);
-        GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
-
-        /* Store pointers to all widgets, for use by lookup_widget(). */
-        GLADE_HOOKUP_OBJECT_NO_REF (msgbox, msgbox, "msgbox");
-        GLADE_HOOKUP_OBJECT_NO_REF (msgbox, dialog_vbox1, "dialog_vbox1");
-        GLADE_HOOKUP_OBJECT_NO_REF (msgbox, dialog_action_area1, "dialog_action_area1");
-        GLADE_HOOKUP_OBJECT (msgbox, button4, "button4");
-
-        return msgbox;
+        return dialog;
 }
 
 GtkWidget* create_Authen (void)

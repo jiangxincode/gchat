@@ -123,6 +123,8 @@ typedef struct _contacts_chat_window_id_t
 #define NAME_LANGTH 20
 #define COMMON_PATH_PREFIX "/home/jiangxin/temp/gchat/"
 
+#define _DEBUG(msg...) printf("\nFILE: %s\nFUNCTION: %s\nLINE: %d\n" ,__FILE__, __FUNCTION__, __LINE__); perror(msg)
+#define _ERROR(msg...) printf("\nFILE: %s\nFUNCTION: %s\nLINE: %d\n" ,__FILE__, __FUNCTION__, __LINE__); perror(msg)
 
 void display_header(gifhdr_t *gifheader);
 void display(char *gifbuffer);

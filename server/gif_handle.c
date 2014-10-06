@@ -175,7 +175,6 @@ void gif_handle_client(void *client)
 			FILE *contactsfp, *usersfp, *as_contactfp;
 			gifhdr_t *gifheaderS;
 			char *gifbufferS;
-			//char filename[25]; //mark
 			int flag = 0;
 
 			get_full_path_name(pathname,gifheader->sender,".db");
@@ -187,7 +186,8 @@ void gif_handle_client(void *client)
 				return;
 			}
 
-			usersfp = fopen("users.db", "r");
+                        get_full_path_name(pathname,NULL,"users.db");
+			usersfp = fopen(pathname, "r");
 			if(usersfp == NULL)
 			{
 				_DEBUG("error:open users.db");

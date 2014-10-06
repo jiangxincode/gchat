@@ -13,8 +13,6 @@ enum
 	OFFLINE_COLUMNS
 };
 
-gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data);
-
 void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data);
 void gif_select_offline_messages(GtkTreeSelection * selection, gpointer data);
 

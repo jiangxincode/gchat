@@ -21,7 +21,6 @@ extern GtkTreeModel *offline_selected_model;
 extern contacts_chat_window_id_t *head;
 extern struct sockaddr_in servAddr;
 extern int sockfd;
-extern char client_loginid[25];
 extern int offline_messages_count;
 
 
@@ -43,7 +42,7 @@ void gif_receive_messages(void *server)
 		{
 			errormsg = strerror(errno);
 			gdk_threads_enter();
-			gtk_widget_show(create_msgbox("error", errormsg));
+			message_dialog(GTK_MESSAGE_INFO, errormsg);
 			gdk_threads_leave();
 			pthread_cancel(pthd);
 			return;
@@ -54,7 +53,7 @@ void gif_receive_messages(void *server)
 			GtkWidget *widget;
 
 			gdk_threads_enter();
-			gtk_widget_show(create_msgbox("error", "Server Disconnected"));
+			message_dialog(GTK_MESSAGE_INFO, "Server Disconnected");
 			gdk_threads_leave();
 
 			while(head != NULL)
@@ -357,8 +356,7 @@ void gif_receive_messages(void *server)
 			case 101:	// GIF_ERROR_LOGIN_INCORRECT
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("error", "Login Incorrect"));
+				message_dialog(GTK_MESSAGE_INFO, "Login Incorrect");
 				gdk_threads_leave();
 
 				break;
@@ -367,9 +365,7 @@ void gif_receive_messages(void *server)
 			case 102:	// GIF_SUCCESS_ADD_CONTACTS
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("info",
-				                 "Your new contact has been successfully added"));
+				message_dialog(GTK_MESSAGE_INFO, "Your new contact has been successfully added");
 				gdk_threads_leave();
 
 				break;
@@ -378,9 +374,7 @@ void gif_receive_messages(void *server)
 			case 103:	// GIF_ERROR_ADD_CONTACTS
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("error",
-				                 "The contact id you entered does not belong to a gchat user"));
+				message_dialog(GTK_MESSAGE_INFO,"The contact id you entered does not belong to a gchat user");
 				gdk_threads_leave();
 
 				break;
@@ -389,9 +383,7 @@ void gif_receive_messages(void *server)
 			case 104:	// GIF_SUCCESS_DELETE_CONTACTS
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("info",
-				                 "Deleted. See the new list after you re-login"));
+				message_dialog(GTK_MESSAGE_INFO,"Deleted. See the new list after you re-login");
 				gdk_threads_leave();
 
 				break;
@@ -400,9 +392,7 @@ void gif_receive_messages(void *server)
 			case 105:	// GIF_ERROR_DELETE_CONTACTS_NOT_A_CONTACT
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("error",
-				                 "1. The id you entered is not in your contact list"));
+				message_dialog(GTK_MESSAGE_INFO,"1. The id you entered is not in your contact list");
 				gdk_threads_leave();
 
 				break;
@@ -411,9 +401,7 @@ void gif_receive_messages(void *server)
 			case 106:	// GIF_ERROR_DELETE_CONTACTS_NOT_A_MEMBER
 			{
 				gdk_threads_enter();
-				gtk_widget_show(create_msgbox
-				                ("error",
-				                 "2. The id you entered is not in your contact list"));
+				message_dialog(GTK_MESSAGE_INFO,"2. The id you entered is not in your contact list");
 				gdk_threads_leave();
 
 				break;

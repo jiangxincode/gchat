@@ -15,6 +15,3 @@ int display_user();
 int delete_user();
 int empty(const char *filename);
 int user_exist(const char *filename, const char *new_user);
-
-#define _DEBUG(msg...) printf("[ %s\n%s\n%d\n]=>",__FILE__, __FUNCTION__, __LINE__); perror(msg)
-#define _ERROR(msg...) printf("[ %s\n%d]=>", __FILE__,  __LINE__); perror(msg)

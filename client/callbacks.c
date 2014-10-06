@@ -27,14 +27,6 @@ int sockfd;
 char client_loginid[25];
 int offline_messages_count;
 
-extern GtkWidget *gifmain;
-
-gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-        gtk_main_quit ();
-        return (FALSE);
-}
-
 
 void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
@@ -54,7 +46,7 @@ void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 	if((send(sockfd, gifbufferS, 32, 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 
 	free(gifbufferS);
@@ -127,7 +119,7 @@ void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 	strcat(pathname,"common/license");
 	if((fp=fopen(pathname,"r")) == NULL)
         {
-                perror("error:open license");
+                _DEBUG("error:open license");
         }
         while((fgets(temp,BUFSIZ,fp)) != NULL)
         {
@@ -158,7 +150,7 @@ void on_butAdd_clicked(GtkButton * button, gpointer user_data)
 
 void on_butConf_clicked(GtkButton * button, gpointer user_data)
 {
-	gtk_widget_show(create_msgbox("info", "Under Construction"));
+	message_dialog(GTK_MESSAGE_INFO, "Under Construction");
 }
 
 
@@ -203,14 +195,14 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	if(sockfd < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 		return;
 	}
 	//connect to the server
 	if((connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr)))< 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 		return;
 	}
 
@@ -236,7 +228,7 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 
 	free(gifheaderS);
@@ -246,7 +238,7 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	if(pthread_create(&pthd, NULL, (void *) gif_receive_messages, (void *) &sockfd) != 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 	pthread_detach(pthd);
 
@@ -375,7 +367,7 @@ on_butSend_clicked(GtkButton * button, gpointer user_data)
 	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 	// clearing the input entry box
 	gtk_entry_set_text(GTK_ENTRY(input_text), "");
@@ -464,7 +456,7 @@ on_entInput_activate(GtkEntry * entry, gpointer user_data)
 	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 	// clearing the input entry box
 	gtk_entry_set_text(GTK_ENTRY(input_text), "");
@@ -509,7 +501,7 @@ on_butAddContactsOk_clicked(GtkButton * button, gpointer user_data)
 	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 
 	free(gifheaderS);
@@ -556,7 +548,7 @@ on_butOfflineDelete_clicked(GtkButton * button, gpointer user_data)
 	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 
 	free(gifheaderS);
@@ -614,7 +606,7 @@ on_Offline(GtkWidget * widget, gpointer user_data)
 	if((send(sockfd, gifbufferS, 32, 0)) < 0)
 	{
 		errormsg = strerror(errno);
-		gtk_widget_show(create_msgbox("error", errormsg));
+		message_dialog(GTK_MESSAGE_ERROR, errormsg);
 	}
 
 	free(gifbufferS);
