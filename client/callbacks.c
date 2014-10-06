@@ -105,6 +105,11 @@ void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *about = gtk_about_dialog_new();
 
+        const gchar *author[]= {"jiangxin\tjiangxinnju@163.com"};
+        /**不知到什么原因，如果set_authors在其它set项之后，会产生段错误*/
+	gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about),author);
+
+
 	char pathname[MAX_PATH_LENGTH];
 	strcpy(pathname,COMMON_PATH_PREFIX);
 	strcat(pathname,"client/pixmaps/icon.png");
@@ -113,6 +118,24 @@ void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG(about), "Version 1.10");
 	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG(about), "Copyright @ jiangxin, 2014");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG(about), "https://github.com/jiangxincode");
+	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(about),"gchat");
+	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about),"Good");
+	gchar license[BUFSIZ*100] = "\0"; //LGPL低于100行
+	gchar temp[BUFSIZ];
+	FILE *fp;
+	strcpy(pathname,COMMON_PATH_PREFIX);
+	strcat(pathname,"common/license");
+	if((fp=fopen(pathname,"r")) == NULL)
+        {
+                perror("error:open license");
+        }
+        while((fgets(temp,BUFSIZ,fp)) != NULL)
+        {
+                strcat(license,temp);
+        }
+	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(about),license);
+	gtk_about_dialog_set_wrap_license (GTK_ABOUT_DIALOG(about),TRUE);
+
 	gtk_dialog_run (GTK_DIALOG(about));
 	gtk_widget_destroy(about);
 
