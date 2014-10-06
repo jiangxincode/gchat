@@ -36,7 +36,6 @@ gint delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 
-
 void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *widget;

@@ -7,7 +7,6 @@ extern GtkWidget *gifmain;
 extern GtkWidget *scrolledwindow1;
 extern GtkWidget *scrolledwindow4;
 
-extern GtkWidget *authen;
 extern GtkWidget *offline;
 //the treeview widget used to display the contacts list for the client
 extern GtkWidget *tree;

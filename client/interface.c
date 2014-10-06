@@ -224,211 +224,108 @@ GtkWidget* create_About (void)
 GtkWidget* create_Authen (void)
 {
         GtkWidget *Authen;
-        GtkWidget *dialog_vbox2;
-        GtkWidget *vbox1;
-        GtkWidget *label4;
-        GtkWidget *hbox1;
-        GtkWidget *image1;
-        GtkWidget *label1;
-        GtkWidget *image2;
-        GtkWidget *entServip;
-        GtkWidget *image3;
-        GtkWidget *label5;
-        GtkWidget *hbox2;
-        GtkWidget *image6;
-        GtkWidget *label2;
-        GtkWidget *image5;
-        GtkWidget *entUserid;
-        GtkWidget *image4;
-        GtkWidget *label6;
-        GtkWidget *hbox3;
-        GtkWidget *image7;
-        GtkWidget *label3;
-        GtkWidget *image8;
-        GtkWidget *entPass;
-        GtkWidget *image9;
-        GtkWidget *label7;
-        GtkWidget *dialog_action_area2;
-        GtkWidget *butCancel;
-        GtkWidget *butClear;
-        GtkWidget *butOk;
+        GtkWidget *vbox;
+        GtkWidget *hbox1, *hbox2, *hbox3, *hbox4;
+        GtkWidget *label1, *label2, *label3;
+        GtkWidget *entServip, *entUserid, *entPass;
+        GtkWidget *butCancel,*butClear,*butOk;
         GtkTooltips *tooltips;
+
+        Authen = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        gtk_window_set_default_size(GTK_WINDOW(Authen),400,300);
+        gtk_window_set_position(GTK_WINDOW(Authen),GTK_WIN_POS_CENTER);
 
         tooltips = gtk_tooltips_new ();
 
-        Authen = gnome_dialog_new (_("gchat - Authentication"), NULL);
-        gtk_widget_set_usize (Authen, 350, 220);
-        gtk_tooltips_set_tip (tooltips, Authen, _("Enter server ip"), NULL);
-        gtk_window_set_resizable (GTK_WINDOW (Authen), FALSE);
-
-        dialog_vbox2 = GNOME_DIALOG (Authen)->vbox;
-        gtk_widget_show (dialog_vbox2);
-
-        vbox1 = gtk_vbox_new (FALSE, 0);
-        gtk_widget_show (vbox1);
-        gtk_box_pack_start (GTK_BOX (dialog_vbox2), vbox1, TRUE, TRUE, 0);
-
-        label4 = gtk_label_new ("");
-        gtk_widget_show (label4);
-        gtk_box_pack_start (GTK_BOX (vbox1), label4, FALSE, FALSE, 0);
-        gtk_label_set_justify (GTK_LABEL (label4), GTK_JUSTIFY_LEFT);
+        vbox = gtk_vbox_new (FALSE, 0);
+        gtk_widget_show (vbox);
+        gtk_container_add(GTK_CONTAINER(Authen) , vbox);
 
         hbox1 = gtk_hbox_new (FALSE, 0);
         gtk_widget_show (hbox1);
-        gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), hbox1, TRUE, TRUE, 0);
 
-        image1 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image1);
-        gtk_box_pack_start (GTK_BOX (hbox1), image1, TRUE, TRUE, 0);
-
-        label1 = gtk_label_new (_("Server Ip"));
+        label1 = gtk_label_new ("Server Ip");
         gtk_widget_show (label1);
         gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, FALSE, 0);
         gtk_widget_set_usize (label1, 60, -2);
         gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
 
-        image2 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image2);
-        gtk_box_pack_start (GTK_BOX (hbox1), image2, TRUE, TRUE, 0);
 
-        entServip = gtk_entry_new ();
+        GtkEntryBuffer *entryBuffer = gtk_entry_buffer_new("127.0.0.1",-1);
+        entServip = gtk_entry_new_with_buffer (GTK_ENTRY_BUFFER(entryBuffer));
         gtk_widget_show (entServip);
         gtk_box_pack_start (GTK_BOX (hbox1), entServip, TRUE, TRUE, 0);
-        gtk_tooltips_set_tip (tooltips, entServip, _("Enter server ip"), NULL);
-
-        image3 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image3);
-        gtk_box_pack_start (GTK_BOX (hbox1), image3, TRUE, TRUE, 0);
-
-        label5 = gtk_label_new ("");
-        gtk_widget_show (label5);
-        gtk_box_pack_start (GTK_BOX (vbox1), label5, FALSE, FALSE, 0);
-        gtk_label_set_justify (GTK_LABEL (label5), GTK_JUSTIFY_LEFT);
+        gtk_tooltips_set_tip (tooltips, entServip, "Enter server ip", NULL);
 
         hbox2 = gtk_hbox_new (FALSE, 0);
         gtk_widget_show (hbox2);
-        gtk_box_pack_start (GTK_BOX (vbox1), hbox2, TRUE, TRUE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), hbox2, TRUE, TRUE, 0);
 
-        image6 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image6);
-        gtk_box_pack_start (GTK_BOX (hbox2), image6, TRUE, TRUE, 0);
-
-        label2 = gtk_label_new (_("User Id"));
+        label2 = gtk_label_new ("User Id");
         gtk_widget_show (label2);
         gtk_box_pack_start (GTK_BOX (hbox2), label2, FALSE, FALSE, 0);
         gtk_widget_set_usize (label2, 60, -2);
         gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
 
-        image5 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image5);
-        gtk_box_pack_start (GTK_BOX (hbox2), image5, TRUE, TRUE, 0);
-
-        entUserid = gtk_entry_new ();
+        entryBuffer = gtk_entry_buffer_new("jiangxin",-1);
+        entUserid = gtk_entry_new_with_buffer (entryBuffer);
         gtk_widget_show (entUserid);
         gtk_box_pack_start (GTK_BOX (hbox2), entUserid, TRUE, TRUE, 0);
-        gtk_tooltips_set_tip (tooltips, entUserid, _("Enter user id"), NULL);
-
-        image4 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image4);
-        gtk_box_pack_start (GTK_BOX (hbox2), image4, TRUE, TRUE, 0);
-
-        label6 = gtk_label_new ("");
-        gtk_widget_show (label6);
-        gtk_box_pack_start (GTK_BOX (vbox1), label6, FALSE, FALSE, 0);
-        gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
+        gtk_tooltips_set_tip (tooltips, entUserid, "Enter user id", NULL);
 
         hbox3 = gtk_hbox_new (FALSE, 0);
         gtk_widget_show (hbox3);
-        gtk_box_pack_start (GTK_BOX (vbox1), hbox3, TRUE, TRUE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
 
-        image7 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image7);
-        gtk_box_pack_start (GTK_BOX (hbox3), image7, TRUE, TRUE, 0);
-
-        label3 = gtk_label_new (_("Password"));
+        label3 = gtk_label_new ("Password");
         gtk_widget_show (label3);
         gtk_box_pack_start (GTK_BOX (hbox3), label3, FALSE, FALSE, 0);
         gtk_widget_set_usize (label3, 60, -2);
         gtk_label_set_justify (GTK_LABEL (label3), GTK_JUSTIFY_LEFT);
 
-        image8 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image8);
-        gtk_box_pack_start (GTK_BOX (hbox3), image8, TRUE, TRUE, 0);
-
-        entPass = gtk_entry_new ();
+        entryBuffer = gtk_entry_buffer_new("123456",-1);
+        entPass = gtk_entry_new_with_buffer (entryBuffer);
         gtk_widget_show (entPass);
         gtk_box_pack_start (GTK_BOX (hbox3), entPass, TRUE, TRUE, 0);
-        gtk_tooltips_set_tip (tooltips, entPass, _("Enter password"), NULL);
+        gtk_tooltips_set_tip (tooltips, entPass, "Enter password", NULL);
         gtk_entry_set_visibility (GTK_ENTRY (entPass), FALSE);
 
-        image9 = create_pixmap (Authen, NULL);
-        gtk_widget_show (image9);
-        gtk_box_pack_start (GTK_BOX (hbox3), image9, TRUE, TRUE, 0);
+        hbox4 = gtk_hbox_new(FALSE, 0);
+        gtk_widget_show(hbox4);
+        gtk_box_pack_start(GTK_BOX(vbox), hbox4, TRUE, TRUE, 0);
 
-        label7 = gtk_label_new ("");
-        gtk_widget_show (label7);
-        gtk_box_pack_start (GTK_BOX (vbox1), label7, FALSE, FALSE, 0);
-        gtk_label_set_justify (GTK_LABEL (label7), GTK_JUSTIFY_LEFT);
+        butCancel = gtk_button_new_with_label("Cancel");
+        gtk_widget_show(butCancel);
+        gtk_tooltips_set_tip(tooltips,butCancel,"Cancel window", NULL);
+        gtk_box_pack_start(GTK_BOX(hbox4),butCancel,TRUE,TRUE,0);
 
-        dialog_action_area2 = GNOME_DIALOG (Authen)->action_area;
-        gtk_widget_show (dialog_action_area2);
-        gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area2), GTK_BUTTONBOX_SPREAD);
+        butClear = gtk_button_new_with_label("Clear");
+        gtk_widget_show(butClear);
+        gtk_tooltips_set_tip(tooltips,butClear,"Clear ALL", NULL);
+        gtk_box_pack_start(GTK_BOX(hbox4),butClear,TRUE,TRUE,0);
 
-        gnome_dialog_append_button (GNOME_DIALOG (Authen), "gtk-cancel");
-        butCancel = GTK_WIDGET (g_list_last (GNOME_DIALOG (Authen)->buttons)->data);
-        gtk_widget_show (butCancel);
-        GTK_WIDGET_SET_FLAGS (butCancel, GTK_CAN_DEFAULT);
-        gtk_tooltips_set_tip (tooltips, butCancel, _("Cancel window"), NULL);
+        butOk = gtk_button_new_with_label("OK");
+        gtk_widget_show(butOk);
+        gtk_tooltips_set_tip(tooltips,butOk,"Connect", NULL);
+        gtk_box_pack_start(GTK_BOX(hbox4),butOk,TRUE,TRUE,0);
 
-        gnome_dialog_append_button (GNOME_DIALOG (Authen), "gtk-clear");
-        butClear = GTK_WIDGET (g_list_last (GNOME_DIALOG (Authen)->buttons)->data);
-        gtk_widget_show (butClear);
-        GTK_WIDGET_SET_FLAGS (butClear, GTK_CAN_DEFAULT);
-        gtk_tooltips_set_tip (tooltips, butClear, _("Clear all"), NULL);
-
-        gnome_dialog_append_button (GNOME_DIALOG (Authen), "gtk-ok");
-        butOk = GTK_WIDGET (g_list_last (GNOME_DIALOG (Authen)->buttons)->data);
-        gtk_widget_show (butOk);
-        GTK_WIDGET_SET_FLAGS (butOk, GTK_CAN_DEFAULT);
-        gtk_tooltips_set_tip (tooltips, butOk, _("Connect"), NULL);
-
-        gtk_signal_connect (GTK_OBJECT (butCancel), "clicked",
-                            G_CALLBACK (on_butCancel_clicked),
-                            NULL);
-        gtk_signal_connect (GTK_OBJECT (butClear), "clicked",
-                            G_CALLBACK (on_butClear_clicked),
-                            NULL);
-        gtk_signal_connect (GTK_OBJECT (butOk), "clicked",
-                            G_CALLBACK (on_butOk_clicked),
-                            NULL);
+        gtk_signal_connect (GTK_OBJECT (butCancel), "clicked", G_CALLBACK (on_butCancel_clicked), NULL);
+        gtk_signal_connect (GTK_OBJECT (butClear), "clicked", G_CALLBACK (on_butClear_clicked), NULL);
+        gtk_signal_connect (GTK_OBJECT (butOk), "clicked", G_CALLBACK (on_butOk_clicked), NULL);
 
         /* Store pointers to all widgets, for use by lookup_widget(). */
         GLADE_HOOKUP_OBJECT_NO_REF (Authen, Authen, "Authen");
-        GLADE_HOOKUP_OBJECT_NO_REF (Authen, dialog_vbox2, "dialog_vbox2");
-        GLADE_HOOKUP_OBJECT (Authen, vbox1, "vbox1");
-        GLADE_HOOKUP_OBJECT (Authen, label4, "label4");
         GLADE_HOOKUP_OBJECT (Authen, hbox1, "hbox1");
-        GLADE_HOOKUP_OBJECT (Authen, image1, "image1");
         GLADE_HOOKUP_OBJECT (Authen, label1, "label1");
-        GLADE_HOOKUP_OBJECT (Authen, image2, "image2");
         GLADE_HOOKUP_OBJECT (Authen, entServip, "entServip");
-        GLADE_HOOKUP_OBJECT (Authen, image3, "image3");
-        GLADE_HOOKUP_OBJECT (Authen, label5, "label5");
         GLADE_HOOKUP_OBJECT (Authen, hbox2, "hbox2");
-        GLADE_HOOKUP_OBJECT (Authen, image6, "image6");
         GLADE_HOOKUP_OBJECT (Authen, label2, "label2");
-        GLADE_HOOKUP_OBJECT (Authen, image5, "image5");
         GLADE_HOOKUP_OBJECT (Authen, entUserid, "entUserid");
-        GLADE_HOOKUP_OBJECT (Authen, image4, "image4");
-        GLADE_HOOKUP_OBJECT (Authen, label6, "label6");
         GLADE_HOOKUP_OBJECT (Authen, hbox3, "hbox3");
-        GLADE_HOOKUP_OBJECT (Authen, image7, "image7");
         GLADE_HOOKUP_OBJECT (Authen, label3, "label3");
-        GLADE_HOOKUP_OBJECT (Authen, image8, "image8");
         GLADE_HOOKUP_OBJECT (Authen, entPass, "entPass");
-        GLADE_HOOKUP_OBJECT (Authen, image9, "image9");
-        GLADE_HOOKUP_OBJECT (Authen, label7, "label7");
-        GLADE_HOOKUP_OBJECT_NO_REF (Authen, dialog_action_area2, "dialog_action_area2");
+        GLADE_HOOKUP_OBJECT (Authen, hbox4, "hbox4");
         GLADE_HOOKUP_OBJECT (Authen, butCancel, "butCancel");
         GLADE_HOOKUP_OBJECT (Authen, butClear, "butClear");
         GLADE_HOOKUP_OBJECT (Authen, butOk, "butOk");
