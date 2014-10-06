@@ -36,6 +36,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     * 解决pathname的多线程争用问题
 * Version 1.07
     * 增加图标
+* Version 1.08
+    * 修复菜单栏不显示问题。
 
 
 将要修复等问题：

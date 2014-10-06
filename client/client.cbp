@@ -30,11 +30,9 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="`pkg-config gtk+-2.0 libgnome-2.0 libgnomeui-2.0 --cflags`" />
 			<Add option="`pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`" />
 		</Compiler>
 		<Linker>
-			<Add option="`pkg-config gtk+-2.0 --libs`" />
 			<Add option="`pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`" />
 		</Linker>
 		<Unit filename="../common/common.c">

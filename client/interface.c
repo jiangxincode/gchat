@@ -9,20 +9,8 @@
 
 static GnomeUIInfo conn_menu_uiinfo[] =
 {
-        {
-                GNOME_APP_UI_ITEM, N_("C_onnect"),
-                NULL,
-                (gpointer) on_mnuConnect_activate, NULL, NULL,
-                GNOME_APP_PIXMAP_STOCK, "gtk-jump-to",
-                0, (GdkModifierType) 0, NULL
-        },
-        {
-                GNOME_APP_UI_ITEM, N_("_Disconnect"),
-                NULL,
-                (gpointer) on_mnuDisconect_activate, NULL, NULL,
-                GNOME_APP_PIXMAP_NONE, NULL,
-                0, (GdkModifierType) 0, NULL
-        },
+        {GNOME_APP_UI_ITEM, N_("C_onnect"), NULL, (gpointer) on_mnuConnect_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("_Disconnect"),NULL,(gpointer) on_mnuDisconect_activate, NULL, NULL,0, NULL,0, 0, NULL},
         GNOMEUIINFO_SEPARATOR,
         GNOMEUIINFO_MENU_EXIT_ITEM (on_mnuQuit_activate, NULL),
         GNOMEUIINFO_END
@@ -30,28 +18,10 @@ static GnomeUIInfo conn_menu_uiinfo[] =
 
 static GnomeUIInfo mnuContacts_menu_uiinfo[] =
 {
-        {
-                GNOME_APP_UI_ITEM, N_("_Add"),
-                NULL,
-                (gpointer) on_mnuAdd_activate, NULL, NULL,
-                GNOME_APP_PIXMAP_STOCK, "gtk-add",
-                0, (GdkModifierType) 0, NULL
-        },
-        {
-                GNOME_APP_UI_ITEM, N_("_Delete"),
-                NULL,
-                (gpointer) on_mnuDelete_activate, NULL, NULL,
-                GNOME_APP_PIXMAP_STOCK, "gtk-delete",
-                0, (GdkModifierType) 0, NULL
-        },
+        {GNOME_APP_UI_ITEM, N_("_Add"), NULL, (gpointer) on_mnuAdd_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("_Delete"),NULL, (gpointer) on_mnuDelete_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
         GNOMEUIINFO_SEPARATOR,
-        {
-                GNOME_APP_UI_ITEM, N_("_Offline Messages"),
-                NULL,
-                (gpointer) on_mnuOffline_activate, NULL, NULL,
-                GNOME_APP_PIXMAP_STOCK, "gnome-stock-mail",
-                0, (GdkModifierType) 0, NULL
-        },
+        {GNOME_APP_UI_ITEM, N_("_Offline Messages"), NULL, (gpointer) on_mnuOffline_activate, NULL, NULL, 0, NULL, 0, 0, NULL},
         GNOMEUIINFO_END
 };
 
@@ -63,20 +33,8 @@ static GnomeUIInfo mnuHelp_menu_uiinfo[] =
 
 static GnomeUIInfo menubar_uiinfo[] =
 {
-        {
-                GNOME_APP_UI_SUBTREE, N_("_Conn"),
-                NULL,
-                conn_menu_uiinfo, NULL, NULL,
-                GNOME_APP_PIXMAP_NONE, NULL,
-                0, (GdkModifierType) 0, NULL
-        },
-        {
-                GNOME_APP_UI_SUBTREE, N_("Con_tacts"),
-                NULL,
-                mnuContacts_menu_uiinfo, NULL, NULL,
-                GNOME_APP_PIXMAP_NONE, NULL,
-                0, (GdkModifierType) 0, NULL
-        },
+        {GNOME_APP_UI_SUBTREE, N_("_Conn"),NULL,conn_menu_uiinfo, NULL, NULL, 0, NULL, 0, 0, NULL},
+        {GNOME_APP_UI_SUBTREE, N_("Con_tacts"),NULL,mnuContacts_menu_uiinfo, NULL, NULL, 0, NULL, 0, 0, NULL},
         GNOMEUIINFO_MENU_HELP_TREE (mnuHelp_menu_uiinfo),
         GNOMEUIINFO_END
 };
@@ -106,6 +64,7 @@ GtkWidget* create_gifclient (void)
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[0].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[1].widget, FALSE);
         gtk_widget_set_sensitive (mnuContacts_menu_uiinfo[3].widget, FALSE);
+        gtk_widget_show(gifclient);
 
         toolbar = gtk_toolbar_new ();
         gtk_widget_show (toolbar);

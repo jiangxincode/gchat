@@ -14,7 +14,6 @@ int main (int argc, char *argv[])
         gnome_program_init ("gchat", "0.01", LIBGNOMEUI_MODULE, argc, argv, GNOME_PARAM_NONE);
 
         gifclient = create_gifclient ();
-        gtk_widget_show (gifclient);
 
         gifmain = gifclient;
 

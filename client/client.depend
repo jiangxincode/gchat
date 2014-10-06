@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1412499928 source:/home/jiangxin/temp/gchat/client/callbacks.c
+1412521437 source:/home/jiangxin/temp/gchat/client/callbacks.c
 	"../common/common.h"
 	"support.h"
 	"callbacks.h"
@@ -3002,7 +3002,7 @@
 
 1412473524 /home/jiangxin/temp/gchat/client/gif_defns.h
 
-1412509281 source:/home/jiangxin/temp/gchat/client/interface.c
+1412520472 source:/home/jiangxin/temp/gchat/client/interface.c
 	"../common/common.h"
 	"support.h"
 	"callbacks.h"
@@ -3014,7 +3014,7 @@
 	"callbacks.h"
 	"interface.h"
 
-1412508633 source:/home/jiangxin/temp/gchat/client/support.c
+1412513749 source:/home/jiangxin/temp/gchat/client/support.c
 	"../common/common.h"
 	"support.h"
 	"callbacks.h"
