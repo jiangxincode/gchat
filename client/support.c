@@ -1,7 +1,5 @@
 #include "../common/common.h"
-#include "support.h"
-#include "callbacks.h"
-#include "interface.h"
+#include "main.h"
 
 extern GtkWidget *gifmain;
 extern GtkWidget *scrolledwindow1;
@@ -30,6 +28,7 @@ void gif_receive_messages(void *server)
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer, *errormsg;
+	char pathname[MAX_PATH_LENGTH]; //mark
 
 	pthread_t pthd = pthread_self();
 
@@ -91,11 +90,11 @@ void gif_receive_messages(void *server)
 		}
 
 		gifheader = (gifhdr_t *) malloc(sizeof(gifhdr_t));
-		memcpy(gifheader, gifbuffer, 32);
+		memcpy(gifheader, gifbuffer, HEADER_LENGTH);
 		if((gifheader->length) > 0)
 		{
 			gifdata = (char *) malloc(gifheader->length);
-			memcpy(gifdata, (gifbuffer + 32), gifheader->length);
+			memcpy(gifdata, (gifbuffer + HEADER_LENGTH), gifheader->length);
 		}
 
 		switch(gifheader->type)
@@ -229,8 +228,13 @@ void gif_receive_messages(void *server)
 
 				// setting the status image for online clients and offline clients
 				gdk_threads_enter();
+
 				if(usrs->status == 1)
-					img = gdk_pixbuf_new_from_file("../pixmaps/ok.png", NULL);
+                                {
+
+                                        img = gdk_pixbuf_new_from_file("../pixmaps/ok.png", NULL);
+                                }
+
 				else
 					img =
 					        gdk_pixbuf_new_from_file("../pixmaps/kill.png", NULL);
@@ -639,34 +643,3 @@ GdkPixbuf *create_pixbuf(const gchar *filename)
         }
         return pixbuf;
 }
-
-/**
-GdkPixbuf* create_pixbuf(const gchar *filename)
-{
-        gchar *pathname = NULL;
-        GdkPixbuf *pixbuf;
-        GError *error = NULL;
-
-        if (!filename || !filename[0])
-                return NULL;
-
-        pathname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                              filename, TRUE, NULL);
-
-        if (!pathname)
-        {
-                g_warning (_("Couldn't find pixmap file: %s"), filename);
-                return NULL;
-        }
-
-        pixbuf = gdk_pixbuf_new_from_file (pathname, &error);
-        if (!pixbuf)
-        {
-                fprintf (stderr, "Failed to load pixbuf file: %s: %s\n",
-                         pathname, error->message);
-                g_error_free (error);
-        }
-        g_free (pathname);
-        return pixbuf;
-}
-*/

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <time.h>
+#include <stdarg.h>
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -128,3 +129,4 @@ typedef struct _contacts_chat_window_id_t
 
 void display_header(gifhdr_t *gifheader);
 void display(char *gifbuffer);
+int get_full_path_name(char *full_path_name, char *filename, int num, ...);

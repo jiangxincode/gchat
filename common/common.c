@@ -34,4 +34,35 @@ void display(char *gifbuffer)
         fprintf(stderr,"%s\n",(gifbuffer+HEADER_LENGTH));
 }
 
+/**
+根据参数设置得到文件的完整路径名
+full_path_name: 必须保证拥有足够等长度来存储路径名
+filename: for example:"users.db"
+num: 附加后缀的数目
+...: 附加后缀列表，必须按续给出
+for example:
+        filename: users.db
+        num: 3
+        ...: server/   db/    friends/
+        result: $(APP_PATH)/server/db/friends/users.db
+$(APP_PATH): /home/jiangxin/temp/gchat/
+*/
+int get_full_path_name(char *full_path_name, char *filename, int num, ...)
+{
+        va_list ap;
+        int ptr_no = 0;
 
+        char *prefix = "/home/jiangxin/temp/gchat/";
+        strcpy(full_path_name,prefix);
+
+        va_start(ap, num);
+        while(ptr_no < num)
+        {
+                strcat(full_path_name, va_arg(ap, char *));
+                ptr_no ++;
+        }
+        va_end(ap);
+
+        strcat(full_path_name,filename);
+        return 0;
+}

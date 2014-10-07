@@ -15,15 +15,3 @@ char *get_system_time()
 	strftime(sys_date, 20, "%d %b %Y  %H:%M", split_t);
 	return sys_date;
 }
-
-int get_full_path_name(char *full_path_name, char *id_path, char *filename)
-{
-        char *prefix = "/home/jiangxin/temp/gchat/server/db/";
-        strcpy(full_path_name,prefix);
-        if(id_path != NULL)
-        {
-                strcat(full_path_name,id_path);
-        }
-        strcat(full_path_name, filename);
-        return 0;
-}

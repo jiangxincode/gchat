@@ -1,7 +1,7 @@
+#define CLIENT_APP
+
 #include "../common/common.h"
-#include "support.h"
-#include "callbacks.h"
-#include "interface.h"
+#include "main.h"
 
 #define GLADE_HOOKUP_OBJECT(component,widget,name) gtk_object_set_data_full (GTK_OBJECT (component), name,  gtk_widget_ref (widget), (GtkDestroyNotify) gtk_widget_unref)
 

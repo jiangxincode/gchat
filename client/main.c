@@ -1,7 +1,5 @@
 #include "../common/common.h"
-#include "support.h"
-#include "callbacks.h"
-#include "interface.h"
+#include "main.h"
 
 GtkWidget *gifmain;
 

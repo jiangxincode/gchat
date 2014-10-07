@@ -50,7 +50,7 @@ void gif_handle_client(void *client)
 			char *ptr, *gifbufferS;
 			FILE *usersfp;
 
-			get_full_path_name(pathname,NULL,"users.db");
+			get_full_path_name(pathname,"users.db",1,"server/db/");
 			usersfp = fopen(pathname,"r");
 			if(usersfp == NULL)
 			{
@@ -97,7 +97,7 @@ void gif_handle_client(void *client)
 
 				printf("%s - Login Correct\n", loginid);
 
-				get_full_path_name(pathname,NULL,"online.db");
+				get_full_path_name(pathname,"online.db",1,"server/db/");
 				onlinefp = fopen(pathname, "a+");
 				if(onlinefp == NULL)
 				{
@@ -116,7 +116,7 @@ void gif_handle_client(void *client)
 				gif_send_clients_contact_list(loginid, client_sockfd, 0);
 
 				// coding for refresing the contacts list of clients who has this just logined client as a contact
-				get_full_path_name(pathname,loginid,"_as.db");
+				get_full_path_name(pathname,"_as.db",3,"server/db/",loginid,"/");
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
@@ -177,7 +177,7 @@ void gif_handle_client(void *client)
 			char *gifbufferS;
 			int flag = 0;
 
-			get_full_path_name(pathname,gifheader->sender,".db");
+			get_full_path_name(pathname,".db",3,"server/db/",gifheader->sender,"/");
 			contactsfp = fopen(pathname, "a");
 			if(contactsfp == NULL)
 			{
@@ -186,7 +186,7 @@ void gif_handle_client(void *client)
 				return;
 			}
 
-                        get_full_path_name(pathname,NULL,"users.db");
+                        get_full_path_name(pathname,"users.db",1,"server/db/");
 			usersfp = fopen(pathname, "r");
 			if(usersfp == NULL)
 			{
@@ -212,7 +212,7 @@ void gif_handle_client(void *client)
 				fclose(contactsfp);
 
 				// making entry in the client's as_contact file whose name is added
-				get_full_path_name(pathname,gifdata,"_as.db");
+				get_full_path_name(pathname,"_as.db",3,"server/db/",gifdata,"/");
 				as_contactfp = fopen(pathname, "a");
 				if(as_contactfp == NULL)
 				{
@@ -278,7 +278,7 @@ void gif_handle_client(void *client)
 
 			char pathname_temp[MAX_PATH_LENGTH];
 
-			get_full_path_name(pathname,NULL,"users.db");
+			get_full_path_name(pathname,"users.db",1,"server/db/");
 			usersfp = fopen(pathname, "r");
 			if(usersfp == NULL)
 			{
@@ -296,7 +296,7 @@ void gif_handle_client(void *client)
 			}
 			fclose(usersfp);
 
-			get_full_path_name(pathname,gifheader->sender,".db");
+			get_full_path_name(pathname,".db",3,"server/db/",gifheader->sender,"/");
 			contactsfp = fopen(pathname, "r");
 			if(contactsfp == NULL)
 			{
@@ -310,7 +310,7 @@ void gif_handle_client(void *client)
 				int localflag = 0;
 				// removing entry in the client's contacts file
 
-				get_full_path_name(pathname_temp,NULL,"contacts_delete_temp.db");
+				get_full_path_name(pathname_temp,"contacts_delete_temp.db",1,"server/db/");
 				newfp = fopen(pathname_temp, "w");
 				while(fread(&usrc, sizeof(user_contacts_t), 1, contactsfp) == 1)
 				{
@@ -325,7 +325,7 @@ void gif_handle_client(void *client)
 				rename(pathname_temp, pathname);
 
 				// removing entry in the client's as_contact file whose name is deleted
-				get_full_path_name(pathname,gifdata,"_as.db");
+				get_full_path_name(pathname,"_as.db",3,"server/db/",gifdata,"/");
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
@@ -333,7 +333,7 @@ void gif_handle_client(void *client)
 					exit(0);
 				}
 
-				get_full_path_name(pathname_temp,NULL,"as_contacts_delete_temp.db");
+				get_full_path_name(pathname_temp,"as_contacts_delete_temp.db",1,"server/db/");
 				newfp = fopen(pathname_temp, "w");
 				while(fread(&usrc, sizeof(user_contacts_t), 1, as_contactfp) == 1)
 				{
@@ -363,7 +363,7 @@ void gif_handle_client(void *client)
 			{
 				int localflag = 0;
 				// removing entry in the client's contacts file
-				get_full_path_name(pathname_temp,NULL,"contacts_delete_temp.db");
+				get_full_path_name(pathname_temp,"contacts_delete_temp.db",1,"server/db/");
 				newfp = fopen(pathname_temp, "w");
 				while(fread(&usrc, sizeof(user_contacts_t), 1, contactsfp) == 1)
 				{
@@ -416,7 +416,7 @@ void gif_handle_client(void *client)
 			int receiving_client_sockfd;
 			int flag = 0;
 
-			get_full_path_name(pathname,NULL,"online.db");
+			get_full_path_name(pathname,"online.db",1,"server/db/");
 
 			if((onlinefp = fopen(pathname, "r")) == NULL)
 			{
@@ -465,7 +465,7 @@ void gif_handle_client(void *client)
 				dateserial = get_system_time();
 				strcpy(omsgs.dateserial, dateserial);
 
-				get_full_path_name(pathname,gifheader->receiver,"_off.db");
+				get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->receiver,"/");
 				offlinefp = fopen(pathname, "a");
 				if(offlinefp == NULL)
 				{
@@ -494,9 +494,9 @@ void gif_handle_client(void *client)
 			FILE *onlinefp, *newfp, *as_contactfp;
 			char pathname_temp[MAX_PATH_LENGTH];
 
-			get_full_path_name(pathname,NULL,"online.db");
+			get_full_path_name(pathname,"online.db",1,"server/db/");
 			onlinefp = fopen(pathname, "r");
-			get_full_path_name(pathname_temp,NULL,"newfile.db");
+			get_full_path_name(pathname_temp,"newfile.db",1,"server/db/");
 			newfp = fopen(pathname_temp, "w");
 
 			rewind(onlinefp);
@@ -513,7 +513,7 @@ void gif_handle_client(void *client)
 			onlinefp = fopen(pathname, "r");
 
 			// coding for refresing the contacts list of clients who has this just logined client as a contact
-			get_full_path_name(pathname_temp,gifheader->sender,"_as.db");
+			get_full_path_name(pathname_temp,"_as.db",3,"server/db/",gifheader->sender,"/");
 			as_contactfp = fopen(pathname, "r");
 			if(as_contactfp == NULL)
 			{
@@ -554,7 +554,7 @@ void gif_handle_client(void *client)
 			counter = flag = 0;
 			i = 1;
 
-			get_full_path_name(pathname,gifheader->sender,"_off.db");
+			get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->sender,"/");
 			if((offlinefp = fopen(pathname, "r+")) == NULL)
 			{
 				_DEBUG("A user's offline messages file");
@@ -652,9 +652,9 @@ void gif_handle_client(void *client)
 			offline_msgs_t omsgs;
 			FILE *offlinefp, *newfp;
 			char pathname_temp[MAX_PATH_LENGTH];
-			get_full_path_name(pathname,gifheader->sender,"_off.db");
+			get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->sender,"/");
 			offlinefp = fopen(pathname, "r");
-			get_full_path_name(pathname_temp,NULL,"new_offline_file.db");
+			get_full_path_name(pathname_temp,"new_offline_file.db",1,"server/db/");
 			newfp = fopen(pathname_temp, "w");
 
 			rewind(offlinefp);
@@ -693,7 +693,7 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 	FILE *contactsfp, *onlinefp;
 	int i;
 
-        get_full_path_name(pathname,client_loginid,".db");
+        get_full_path_name(pathname,".db",3,"server/db/",client_loginid,"/");
 	contactsfp = fopen(pathname,"r");
 	if(contactsfp == NULL)
 	{
@@ -701,7 +701,7 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 		exit(0);
 	}
 
-        get_full_path_name(pathname,NULL,"online.db");
+        get_full_path_name(pathname,"online.db",1,"server/db/");
 	onlinefp = fopen(pathname, "r");
 	if(onlinefp == NULL)
 	{

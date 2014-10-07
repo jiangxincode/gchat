@@ -1,7 +1,5 @@
 #include "../common/common.h"
-#include "support.h"
-#include "callbacks.h"
-#include "interface.h"
+#include "main.h"
 
 
 
@@ -43,7 +41,7 @@ void on_mnuDisconect_activate(GtkMenuItem * menuitem, gpointer user_data)
 
 	gifbufferS = (char *) malloc(sizeof(gifhdr_t));
 	memcpy(gifbufferS, gifheaderS, sizeof(gifhdr_t));
-	if((send(sockfd, gifbufferS, 32, 0)) < 0)
+	if((send(sockfd, gifbufferS, HEADER_LENGTH, 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);
@@ -360,11 +358,11 @@ on_butSend_clicked(GtkButton * button, gpointer user_data)
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(input_text)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-	gifbufferS = (char *) malloc(32 + gifheaderS->length);
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);
@@ -449,11 +447,11 @@ on_entInput_activate(GtkEntry * entry, gpointer user_data)
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(input_text)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-	gifbufferS = (char *) malloc(32 + gifheaderS->length);
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);
@@ -494,11 +492,11 @@ on_butAddContactsOk_clicked(GtkButton * button, gpointer user_data)
 	strcpy(gifdataS, gtk_entry_get_text(GTK_ENTRY(contactsid)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-	gifbufferS = (char *) malloc(32 + gifheaderS->length);
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);
@@ -541,11 +539,11 @@ on_butOfflineDelete_clicked(GtkButton * button, gpointer user_data)
 	strcpy(gifdataS, offline_selected_msg);
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-	gifbufferS = (char *) malloc(32 + gifheaderS->length);
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);
@@ -601,9 +599,9 @@ on_Offline(GtkWidget * widget, gpointer user_data)
 	strcpy(gifheaderS->receiver, "server");
 	gifheaderS->reserved = 0;
 
-	memcpy(gifbufferS, gifheaderS, 32);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
 
-	if((send(sockfd, gifbufferS, 32, 0)) < 0)
+	if((send(sockfd, gifbufferS, HEADER_LENGTH, 0)) < 0)
 	{
 		errormsg = strerror(errno);
 		message_dialog(GTK_MESSAGE_ERROR, errormsg);

@@ -55,7 +55,7 @@ int add_user()
 		fprintf(stderr,"invalid input\n");
 		return -1;
 	}
-	get_full_path_name(pathname,NULL,"users.db");
+	get_full_path_name(pathname,"users.db",1,"server/db/");
 	if(user_exist(pathname,usr.loginid) == 1) //用户已存在
         {
                 fprintf(stderr,"User exists\n");
@@ -77,16 +77,16 @@ int add_user()
 	fclose(fp);
 
 	// creating a file for the new user for storing his contacts list.
-	get_full_path_name(pathname,usr.loginid,".db");
+	get_full_path_name(pathname,".db",3,"server/db/",usr.loginid,"/");
 	fp = fopen(pathname, "w");
 	fclose(fp);
 
 	// creating a file for the new user for storing the list of users who has this user as their contact.
-	get_full_path_name(pathname,usr.loginid,"_as.db");
+	get_full_path_name(pathname,"_as.db",3,"server/db/",usr.loginid,"/");
 	fp = fopen(pathname, "w");
 	fclose(fp);
 
-	get_full_path_name(pathname,usr.loginid,"_off.db");
+	get_full_path_name(pathname,"_off.db",3,"server/db/",usr.loginid,"/");
 	fp = fopen(pathname, "w");
 	fclose(fp);
 	return 0;
@@ -103,7 +103,7 @@ int display_user()
 	char pathname[MAX_PATH_LENGTH];
 	FILE *fp;
 	users_t usr;
-	get_full_path_name(pathname,NULL,"users.db");
+	get_full_path_name(pathname,"users.db",1,"server/db/");
 
 	if(empty(pathname) == 1)
         {
@@ -144,13 +144,13 @@ int delete_user()
 		fprintf(stderr,"%s",strerror(errno));
 		return -1;
 	}
-	get_full_path_name(pathname,NULL,"users.db");
+	get_full_path_name(pathname,"users.db",1,"server/db/");
 	if((fp=fopen(pathname,"r")) == NULL)
         {
                 fprintf(stderr,"No Users\n");
                 return 1;
         }
-	get_full_path_name(pathname_temp,NULL,"tempfile.db");
+	get_full_path_name(pathname_temp,"tempfile.db",1,"server/db/");
 	if((fp_temp=fopen(pathname_temp,"w"))== NULL)
         {
                 fprintf(stderr,"%s",strerror(errno));
@@ -169,13 +169,13 @@ int delete_user()
 	rename(pathname_temp, pathname);
 	if(flag ==1)
 	{
-		get_full_path_name(pathname,name,".db");
+		get_full_path_name(pathname,".db",3,"server/db/",name,"/");
 		remove(pathname);
 
-		get_full_path_name(pathname,name,"_as.db");
+		get_full_path_name(pathname,"_as.db",3,"server/db/",name,"/");
 		remove(pathname);
 
-		get_full_path_name(pathname,name,"_off.db");
+		get_full_path_name(pathname,"_off.db",3,"server/db/",name,"/");
 		remove(pathname);
 		printf("Deleted\n");
 	}
