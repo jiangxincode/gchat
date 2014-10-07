@@ -52,10 +52,11 @@ http://opensource.org/licenses/lgpl-3.0.html
     * 修复上一版本引入的bug
     * 使用宏变量代替大多数数字参数，增强了系统可读性。
     * 去除所有编译警告。
+* Version 1.16
+    * 解决用户密码保密问题。(使用ncurses库)
       
 将要修复等问题：
 
-* 用户密码保密问题。
 * 减少服务器端对用户信息等处理，提高自动化。
 * 解决用户处理过程中等海量用户处理问题。
 * 解决服务器端用户添加界面问题。
@@ -71,6 +72,15 @@ http://opensource.org/licenses/lgpl-3.0.html
 * gdk线程运行机制。
 * MySQL数据库与GTK+的接口。
 
+* 编译条件与方式
+    * 系统具有gnome开发环境，使用gcc编译器或者codeblocks等使用gcc为编译器的集成开发环境。
+    * 使用以下方式加载gnome库：
+        * `pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`
+        * `pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`
+    
+    * 使用以下方式加载ncurses库
+        * -lncurses
+    
 
 <img src="" />
 

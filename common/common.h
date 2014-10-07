@@ -17,6 +17,8 @@
 
 #include <gnome.h>
 
+#include <ncurses.h>
+
 // gchat macros
 //
 

@@ -62,11 +62,7 @@ int add_user()
                 return 1;
         }
 	printf("Enter the password : \n");
-	if((scanf("%s",usr.password)) == EOF)
-	{
-		fprintf(stderr,"No Users\n");
-		return -1;
-	}
+	get_passwd(usr.password);
 
 	if((fp = fopen(pathname,"a")) == NULL) //打开文件错误
         {
