@@ -54,7 +54,10 @@ http://opensource.org/licenses/lgpl-3.0.html
     * 去除所有编译警告。
 * Version 1.16
     * 解决用户密码保密问题。(使用ncurses库)
-      
+* Version 1.17
+    * 修改本README文件。
+    * 删除material文件夹中资料文件。
+    
 将要修复等问题：
 
 * 减少服务器端对用户信息等处理，提高自动化。
@@ -73,13 +76,22 @@ http://opensource.org/licenses/lgpl-3.0.html
 * MySQL数据库与GTK+的接口。
 
 * 编译条件与方式
-    * 系统具有gnome开发环境，使用gcc编译器或者codeblocks等使用gcc为编译器的集成开发环境。
+
+    * 编译条件
+        * 系统具有gnome开发环境。
+        * 使用gcc编译器或者codeblocks等使用gcc为编译器的集成开发环境。
+        * 安装有ncurses/mysql库(运行环境和开发环境)
+    
     * 使用以下方式加载gnome库：
         * `pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`
         * `pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`
-    
-    * 使用以下方式加载ncurses库
+        
+    * 使用以下方式加载ncurses库：
         * -lncurses
+        
+    * 使用以下方式加载MySQL库：
+        * `mysql_config --cflags`
+        * `mysql_config --libs`
     
 
 <img src="" />
