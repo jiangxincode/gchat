@@ -19,6 +19,15 @@
 
 // gchat macros
 //
+
+
+#define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
+#define SERVER_PORT 9028
+#define COMMON_LENGTH 20
+#define BUFF_SIZE 1024
+#define COMMON_PATH_PREFIX "/home/jiangxin/temp/gchat/"
+
+
 #define GIF_LOGIN_MSG 1			//用户登录
 #define GIF_CALL_MSG 2			//用户呼叫
 #define GIF_ADDRLIST_MSG 3		//更新联系人列表信息
@@ -45,8 +54,8 @@ typedef struct _gifhdr_t
 {
 	unsigned int type;	//消息类型
 	unsigned int length;	//消息的长度，以字节为单位
-	char sender[10];	//发送方
-	char receiver[10];	//接收方
+	char sender[COMMON_LENGTH];	//发送方
+	char receiver[COMMON_LENGTH];	//接收方
 	unsigned int reserved;
 }gifhdr_t;
 
@@ -55,8 +64,8 @@ typedef struct _gifhdr_t
 //
 typedef struct _users_t
 {
-	char loginid[20];	//用户名
-	char password[20];	//密码
+	char loginid[COMMON_LENGTH];	//用户名
+	char password[COMMON_LENGTH];	//密码
 }users_t;
 
 
@@ -64,7 +73,7 @@ typedef struct _users_t
 //
 typedef struct _online_users_t
 {
-	char loginid[20];	//用户名
+	char loginid[COMMON_LENGTH];	//用户名
 	int sockfd;		//在线用户客户机的套接字
 }online_users_t;
 
@@ -73,7 +82,7 @@ typedef struct _online_users_t
 //
 typedef struct _user_contacts_t
 {
-	char loginid[20];
+	char loginid[COMMON_LENGTH];
 }user_contacts_t;
 
 
@@ -81,7 +90,7 @@ typedef struct _user_contacts_t
 //
 typedef struct _user_status_t
 {
-	char loginid[20];
+	char loginid[COMMON_LENGTH];
 	unsigned int status;
 }user_status_t;
 
@@ -90,10 +99,10 @@ typedef struct _user_status_t
 //
 typedef struct _offline_msgs_t
 {
-	char sender[20];
-	char dateserial[20];
+	char sender[COMMON_LENGTH];
+	char dateserial[COMMON_LENGTH];
 	unsigned int new;
-	char message[1024];
+	char message[BUFF_SIZE];
 }offline_msgs_t;
 
 
@@ -101,8 +110,8 @@ typedef struct _offline_msgs_t
 //
 typedef struct _offline_msgs_send_t
 {
-	char sender[20];
-	char dateserial[20];
+	char sender[COMMON_LENGTH];
+	char dateserial[COMMON_LENGTH];
 	unsigned int new;
 	unsigned int length;
 }offline_msgs_send_t;
@@ -112,17 +121,14 @@ typedef struct _offline_msgs_send_t
 //
 typedef struct _contacts_chat_window_id_t
 {
-        char contacts_name[20];
+        char contacts_name[COMMON_LENGTH];
         unsigned int window_id;
         unsigned int window_open;	//used as boolean variable(opened or not)
         struct _contacts_chat_window_id_t *next;
 } contacts_chat_window_id_t;
 
 #define HEADER_LENGTH (sizeof(gifhdr_t)) //the length of the gif_hdr_t
-#define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
-#define SERVER_PORT 9028
-#define NAME_LANGTH 20
-#define COMMON_PATH_PREFIX "/home/jiangxin/temp/gchat/"
+#define BODY_LENGTH (BUFF_SIZE-HEADER_LENGTH)
 
 #define _DEBUG(msg...) printf("\nFILE: %s\nFUNCTION: %s\nLINE: %d\n" ,__FILE__, __FUNCTION__, __LINE__); perror(msg)
 #define _ERROR(msg...) printf("\nFILE: %s\nFUNCTION: %s\nLINE: %d\n" ,__FILE__, __FUNCTION__, __LINE__); perror(msg)

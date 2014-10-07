@@ -7,15 +7,15 @@ void gif_handle_client(void *client)
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer;
-	char loginid[20], password[20];
+	char loginid[COMMON_LENGTH], password[COMMON_LENGTH];
 	char pathname[MAX_PATH_LENGTH];
 
 	pthread_t pthd = pthread_self(); //获取自身等线程ID
 
 	while(1)
 	{
-		gifbuffer = (char *) malloc(1024);
-		rcv_status = recv(client_sockfd, gifbuffer, 1024, 0);
+		gifbuffer = (char *) malloc(BUFF_SIZE);
+		rcv_status = recv(client_sockfd, gifbuffer, BUFF_SIZE, 0);
 
 		if(rcv_status == -1)
 		{
@@ -36,6 +36,13 @@ void gif_handle_client(void *client)
 			gifdata = (char *) malloc(gifheader->length);
 			memcpy(gifdata , (gifbuffer + HEADER_LENGTH), gifheader->length);
 		}
+		else
+                {
+                        _DEBUG("gifheader->length<=0");
+			pthread_cancel(pthd);
+			return;
+
+                }
 
 		switch(gifheader->type)
 		{
@@ -116,7 +123,7 @@ void gif_handle_client(void *client)
 				gif_send_clients_contact_list(loginid, client_sockfd, 0);
 
 				// coding for refresing the contacts list of clients who has this just logined client as a contact
-				get_full_path_name(pathname,"_as.db",3,"server/db/",loginid,"/");
+				get_full_path_name(pathname,"_as.db",2,"server/db/",loginid);
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
@@ -177,7 +184,7 @@ void gif_handle_client(void *client)
 			char *gifbufferS;
 			int flag = 0;
 
-			get_full_path_name(pathname,".db",3,"server/db/",gifheader->sender,"/");
+			get_full_path_name(pathname,".db",2,"server/db/",gifheader->sender);
 			contactsfp = fopen(pathname, "a");
 			if(contactsfp == NULL)
 			{
@@ -212,7 +219,7 @@ void gif_handle_client(void *client)
 				fclose(contactsfp);
 
 				// making entry in the client's as_contact file whose name is added
-				get_full_path_name(pathname,"_as.db",3,"server/db/",gifdata,"/");
+				get_full_path_name(pathname,"_as.db",2,"server/db/",gifdata);
 				as_contactfp = fopen(pathname, "a");
 				if(as_contactfp == NULL)
 				{
@@ -296,7 +303,7 @@ void gif_handle_client(void *client)
 			}
 			fclose(usersfp);
 
-			get_full_path_name(pathname,".db",3,"server/db/",gifheader->sender,"/");
+			get_full_path_name(pathname,".db",2,"server/db/",gifheader->sender);
 			contactsfp = fopen(pathname, "r");
 			if(contactsfp == NULL)
 			{
@@ -325,7 +332,7 @@ void gif_handle_client(void *client)
 				rename(pathname_temp, pathname);
 
 				// removing entry in the client's as_contact file whose name is deleted
-				get_full_path_name(pathname,"_as.db",3,"server/db/",gifdata,"/");
+				get_full_path_name(pathname,"_as.db",2,"server/db/",gifdata);
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
@@ -440,11 +447,11 @@ void gif_handle_client(void *client)
 
 			if(flag == 1)
 			{
-				gifbufferS = (char *)malloc(32 + gifheader->length);
-				memcpy(gifbufferS, gifheader, 32);
-				memcpy((gifbufferS + 32), gifdata, gifheader->length);
+				gifbufferS = (char *)malloc(HEADER_LENGTH + gifheader->length);
+				memcpy(gifbufferS, gifheader, HEADER_LENGTH);
+				memcpy((gifbufferS + HEADER_LENGTH), gifdata, gifheader->length);
 
-				if((send(receiving_client_sockfd, gifbufferS, (32 + gifheader->length), 0)) < 0)
+				if((send(receiving_client_sockfd, gifbufferS, (HEADER_LENGTH + gifheader->length), 0)) < 0)
 				{
 					_DEBUG("Message passing error");
 				}
@@ -465,7 +472,7 @@ void gif_handle_client(void *client)
 				dateserial = get_system_time();
 				strcpy(omsgs.dateserial, dateserial);
 
-				get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->receiver,"/");
+				get_full_path_name(pathname,"_off.db",2,"server/db/",gifheader->receiver);
 				offlinefp = fopen(pathname, "a");
 				if(offlinefp == NULL)
 				{
@@ -513,7 +520,7 @@ void gif_handle_client(void *client)
 			onlinefp = fopen(pathname, "r");
 
 			// coding for refresing the contacts list of clients who has this just logined client as a contact
-			get_full_path_name(pathname_temp,"_as.db",3,"server/db/",gifheader->sender,"/");
+			get_full_path_name(pathname_temp,"_as.db",2,"server/db/",gifheader->sender);
 			as_contactfp = fopen(pathname, "r");
 			if(as_contactfp == NULL)
 			{
@@ -554,7 +561,7 @@ void gif_handle_client(void *client)
 			counter = flag = 0;
 			i = 1;
 
-			get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->sender,"/");
+			get_full_path_name(pathname,"_off.db",2,"server/db/",gifheader->sender);
 			if((offlinefp = fopen(pathname, "r+")) == NULL)
 			{
 				_DEBUG("A user's offline messages file");
@@ -562,7 +569,7 @@ void gif_handle_client(void *client)
 			}
 
 			gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
-			gifdataS = (char *) malloc(992);
+			gifdataS = (char *) malloc(BODY_LENGTH);
 
 			while((fread(&omsgs, sizeof(offline_msgs_t), 1, offlinefp)) == 1)
 			{
@@ -581,7 +588,7 @@ void gif_handle_client(void *client)
 					fwrite(&omsgs, sizeof(offline_msgs_t), 1, offlinefp);
 				}
 
-				if((counter + sizeof(offline_msgs_send_t) + omsgs_se->length) <= 992)
+				if((counter + sizeof(offline_msgs_send_t) + omsgs_se->length) <= BODY_LENGTH)
 				{
 					memcpy((gifdataS + counter), omsgs_se, sizeof(offline_msgs_send_t));
 					counter = counter + sizeof(offline_msgs_send_t);
@@ -598,11 +605,11 @@ void gif_handle_client(void *client)
 
 					i++;
 
-					gifbufferS = (char *) malloc(32 + (gifheaderS->length));
-					memcpy(gifbufferS, gifheaderS, 32);
-					memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+					gifbufferS = (char *) malloc(HEADER_LENGTH + (gifheaderS->length));
+					memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+					memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-					if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+					if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 					{
 						_DEBUG("Error sending Offline Messages");
 					}
@@ -613,7 +620,7 @@ void gif_handle_client(void *client)
 
 					counter = 0;
 					gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
-					gifdataS = (char *) malloc(992);
+					gifdataS = (char *) malloc(BODY_LENGTH);
 				}
 
 				free(omsgs_se);
@@ -626,11 +633,11 @@ void gif_handle_client(void *client)
 			gifheaderS->length = counter;
 			gifheaderS->reserved = i;
 
-			gifbufferS = (char *) malloc(32 + (gifheaderS->length));
-			memcpy(gifbufferS, gifheaderS, 32);
-			memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+			gifbufferS = (char *) malloc(HEADER_LENGTH + (gifheaderS->length));
+			memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+			memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-			if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+			if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 			{
 				_DEBUG("Error sending Offline Messages");
 			}
@@ -652,7 +659,7 @@ void gif_handle_client(void *client)
 			offline_msgs_t omsgs;
 			FILE *offlinefp, *newfp;
 			char pathname_temp[MAX_PATH_LENGTH];
-			get_full_path_name(pathname,"_off.db",3,"server/db/",gifheader->sender,"/");
+			get_full_path_name(pathname,"_off.db",2,"server/db/",gifheader->sender);
 			offlinefp = fopen(pathname, "r");
 			get_full_path_name(pathname_temp,"new_offline_file.db",1,"server/db/");
 			newfp = fopen(pathname_temp, "w");
@@ -680,9 +687,9 @@ void gif_handle_client(void *client)
 	}
 }
 
-void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int type)
 // type = 0 (sending the contacts list while normal login)
 // type = 1(sending the contacts list while refresing)
+void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int type)
 {
 	char pathname[MAX_PATH_LENGTH];
 	gifhdr_t *gifheaderS;
@@ -693,7 +700,7 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 	FILE *contactsfp, *onlinefp;
 	int i;
 
-        get_full_path_name(pathname,".db",3,"server/db/",client_loginid,"/");
+        get_full_path_name(pathname,".db",2,"server/db/",client_loginid);
 	contactsfp = fopen(pathname,"r");
 	if(contactsfp == NULL)
 	{
@@ -717,8 +724,8 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 	if(type == 1)
 		gifheaderS->reserved = 1;
 
-	gifdataS = (char *) malloc(992);
-	gifbufferS = (char *) malloc(1024);
+	gifdataS = (char *) malloc(BODY_LENGTH);
+	gifbufferS = (char *) malloc(BUFF_SIZE);
 	usrs = (user_status_t *) malloc(sizeof(user_status_t));
 
 	i = 0;
@@ -744,10 +751,10 @@ void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int 
 	fclose(contactsfp);
 
 	gifheaderS->length = (i * (sizeof(user_status_t)));
-	memcpy(gifbufferS, gifheaderS, 32);
-	memcpy((gifbufferS + 32), gifdataS, gifheaderS->length);
+	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
+	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
-	if((send(client_sockfd, gifbufferS, (32 + gifheaderS->length), 0)) < 0)
+	if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
 		_DEBUG("Error sending message(Address list)");
 	}

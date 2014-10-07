@@ -315,7 +315,7 @@ void
 on_butSend_clicked(GtkButton * button, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
-	char title[20];
+	char title[COMMON_LENGTH];
 	char *gifdataS, *gifbufferS, *errormsg;
 	GtkWidget *window, *input_text, *display_text;
 	GtkTextBuffer *buff;
@@ -382,7 +382,7 @@ on_Chat_destroy(GtkObject * object, gpointer user_data)
 {
 	contacts_chat_window_id_t *ptr;
 	GtkWidget *window;
-	char title[20];
+	char title[COMMON_LENGTH];
 
 	window = lookup_widget(GTK_WIDGET(object), "Chat");
 	strcpy(title, gtk_window_get_title(GTK_WINDOW(window)));
@@ -404,7 +404,7 @@ void
 on_entInput_activate(GtkEntry * entry, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
-	char title[20];
+	char title[COMMON_LENGTH];
 	char *gifdataS, *gifbufferS, *errormsg;
 	GtkWidget *window, *input_text, *display_text;
 	GtkTextBuffer *buff;

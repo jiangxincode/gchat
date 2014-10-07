@@ -77,16 +77,16 @@ int add_user()
 	fclose(fp);
 
 	// creating a file for the new user for storing his contacts list.
-	get_full_path_name(pathname,".db",3,"server/db/",usr.loginid,"/");
+	get_full_path_name(pathname,".db",2,"server/db/",usr.loginid);
 	fp = fopen(pathname, "w");
 	fclose(fp);
 
 	// creating a file for the new user for storing the list of users who has this user as their contact.
-	get_full_path_name(pathname,"_as.db",3,"server/db/",usr.loginid,"/");
+	get_full_path_name(pathname,"_as.db",2,"server/db/",usr.loginid);
 	fp = fopen(pathname, "w");
 	fclose(fp);
 
-	get_full_path_name(pathname,"_off.db",3,"server/db/",usr.loginid,"/");
+	get_full_path_name(pathname,"_off.db",2,"server/db/",usr.loginid);
 	fp = fopen(pathname, "w");
 	fclose(fp);
 	return 0;
@@ -135,7 +135,7 @@ int delete_user()
 	FILE *fp;
 	users_t usr;
 	FILE *fp_temp;
-	char name[NAME_LANGTH];
+	char name[COMMON_LENGTH];
 	char pathname_temp[MAX_PATH_LENGTH];
 	int flag = 0;
 	printf("Enter the name to be deleted : \n");
@@ -169,13 +169,13 @@ int delete_user()
 	rename(pathname_temp, pathname);
 	if(flag ==1)
 	{
-		get_full_path_name(pathname,".db",3,"server/db/",name,"/");
+		get_full_path_name(pathname,".db",2,"server/db/",name);
 		remove(pathname);
 
-		get_full_path_name(pathname,"_as.db",3,"server/db/",name,"/");
+		get_full_path_name(pathname,"_as.db",2,"server/db/",name);
 		remove(pathname);
 
-		get_full_path_name(pathname,"_off.db",3,"server/db/",name,"/");
+		get_full_path_name(pathname,"_off.db",2,"server/db/",name);
 		remove(pathname);
 		printf("Deleted\n");
 	}

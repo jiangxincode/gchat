@@ -52,7 +52,7 @@ int get_full_path_name(char *full_path_name, char *filename, int num, ...)
         va_list ap;
         int ptr_no = 0;
 
-        char *prefix = "/home/jiangxin/temp/gchat/";
+        char *prefix = COMMON_PATH_PREFIX;
         strcpy(full_path_name,prefix);
 
         va_start(ap, num);

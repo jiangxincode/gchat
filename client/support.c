@@ -28,14 +28,14 @@ void gif_receive_messages(void *server)
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer, *errormsg;
-	char pathname[MAX_PATH_LENGTH]; //mark
+	//char pathname[MAX_PATH_LENGTH]; //mark
 
 	pthread_t pthd = pthread_self();
 
 	while(1)
 	{
-		gifbuffer = (char *) malloc(1024);
-		rcv_status = recv(server_sockfd, gifbuffer, 1024, 0);
+		gifbuffer = (char *) malloc(BUFF_SIZE);
+		rcv_status = recv(server_sockfd, gifbuffer, BUFF_SIZE, 0);
 
 		if(rcv_status < 0)
 		{
@@ -96,6 +96,13 @@ void gif_receive_messages(void *server)
 			gifdata = (char *) malloc(gifheader->length);
 			memcpy(gifdata, (gifbuffer + HEADER_LENGTH), gifheader->length);
 		}
+		else
+                {
+                        _DEBUG("gifheader->length<=0");
+			pthread_cancel(pthd);
+			return;
+
+                }
 
 		switch(gifheader->type)
 		{
@@ -506,6 +513,12 @@ void gif_receive_messages(void *server)
 				                            (offline_tree), column);
 				gdk_threads_leave();
 			}
+			else
+                        {
+                                _DEBUG("error: condition");
+				pthread_cancel(pthd);
+				return;
+                        }
 
 			counter = 0;
 			omsgs_se =

@@ -48,6 +48,10 @@ http://opensource.org/licenses/lgpl-3.0.html
 * Version 1.14
     * 将client等头文件进行合并，简化了程序结构，并与server保持了统一。
     * 重写了get_full_path_name，合并了服务器端和客户端等操作，并修改了相应的调用接口。
+* Version 1.15
+    * 修复上一版本引入的bug
+    * 使用宏变量代替大多数数字参数，增强了系统可读性。
+    * 去除所有编译警告。
       
 将要修复等问题：
 
@@ -59,6 +63,8 @@ http://opensource.org/licenses/lgpl-3.0.html
 * 内存泄漏检测，主要是FILE是否关闭
 * 实现聊天室功能
 * 中文化完善。
+* 实现类似QQ的自动隐藏功能。
+* 解决当用户不正常下线时对online.db的处理。
 
 待学习知识：
 
