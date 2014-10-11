@@ -27,8 +27,8 @@ void gif_receive_messages(void *server)
 	int server_sockfd = *(int *)server;
 	gifhdr_t *gifheader;
 	int rcv_status;
-	char *gifdata, *gifbuffer, *errormsg;
-	//char pathname[MAX_PATH_LENGTH]; //mark
+	char *gifdata, *gifbuffer;
+	char PATHNAME[MAX_PATH_LENGTH];
 
 	pthread_t pthd = pthread_self();
 
@@ -37,16 +37,14 @@ void gif_receive_messages(void *server)
 		gifbuffer = (char *) malloc(BUFF_SIZE);
 		rcv_status = recv(server_sockfd, gifbuffer, BUFF_SIZE, 0);
 
-		if(rcv_status < 0)
+		if(rcv_status < 0) //发生错误
 		{
-			errormsg = strerror(errno);
 			gdk_threads_enter();
-			message_dialog(GTK_MESSAGE_INFO, errormsg);
+			message_dialog(GTK_MESSAGE_INFO, strerror(errno));
 			gdk_threads_leave();
-			pthread_cancel(pthd);
-			return;
+			pthread_cancel(pthd); //非正常退出
 		}
-		else if(rcv_status == 0)
+		else if(rcv_status == 0) //断开连接
 		{
 			contacts_chat_window_id_t *ptr;
 			GtkWidget *widget;
@@ -55,7 +53,7 @@ void gif_receive_messages(void *server)
 			message_dialog(GTK_MESSAGE_INFO, "Server Disconnected");
 			gdk_threads_leave();
 
-			while(head != NULL)
+			while(head != NULL) //关闭所有打开的聊天窗口
 			{
 				ptr = head;
 				head = head->next;
@@ -63,8 +61,8 @@ void gif_receive_messages(void *server)
 			}
 
 			gdk_threads_enter();
-			gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
 
+			gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
 			widget = lookup_widget(gifmain, "butConnect");
 			gtk_widget_set_sensitive(widget, TRUE);
 			widget = lookup_widget(gifmain, "mnuConnect");
@@ -83,10 +81,10 @@ void gif_receive_messages(void *server)
 			gtk_widget_set_sensitive(widget, FALSE);
 			widget = lookup_widget(gifmain, "mnuOffline");
 			gtk_widget_set_sensitive(widget, FALSE);
+
 			gdk_threads_leave();
 
 			pthread_cancel(pthd);
-			return;
 		}
 
 		gifheader = (gifhdr_t *) malloc(sizeof(gifhdr_t));
@@ -98,15 +96,12 @@ void gif_receive_messages(void *server)
 		}
 		else
                 {
-                        _DEBUG("gifheader->length<=0");
-			pthread_cancel(pthd);
-			return;
-
+			gifdata = NULL;
                 }
 
 		switch(gifheader->type)
 		{
-		case 3:		// GIF_ADDRLIST_MSG
+		case GIF_ADDRLIST_MSG:
 		{
 			contacts_chat_window_id_t *ptr;
 			user_status_t *usrs;
@@ -129,7 +124,7 @@ void gif_receive_messages(void *server)
 				gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
 				gdk_threads_leave();
 
-				while(head != NULL)
+				while(head != NULL) //关闭所有已经打开的窗口
 				{
 					ptr = head;
 					head = head->next;
@@ -238,13 +233,15 @@ void gif_receive_messages(void *server)
 
 				if(usrs->status == 1)
                                 {
-
-                                        img = gdk_pixbuf_new_from_file("../pixmaps/ok.png", NULL);
+                                        get_full_path_name(PATHNAME,"ok.png",1,"client/pixmaps");
+                                        img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
                                 }
 
 				else
-					img =
-					        gdk_pixbuf_new_from_file("../pixmaps/kill.png", NULL);
+                                {
+                                        get_full_path_name(PATHNAME,"kill.png",1,"client/pixmaps");
+                                        img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
+                                }
 				gdk_threads_leave();
 
 				//Acquire a child iterator
@@ -282,7 +279,7 @@ void gif_receive_messages(void *server)
 			break;
 		}
 
-		case 6:		// GIF_CHAT_MSG
+		case GIF_CHAT_MSG:
 		{
 			contacts_chat_window_id_t *ptr;
 			GtkWidget *display_text;
@@ -360,20 +357,19 @@ void gif_receive_messages(void *server)
 			break;
 		}
 
-		case 8:		// GIF_SUCCESS_N_ERROR_MSG
+		case GIF_SUCCESS_N_ERROR_MSG:
 		{
 			switch(gifheader->reserved)
 			{
-			case 101:	// GIF_ERROR_LOGIN_INCORRECT
+			case GIF_ERROR_LOGIN_INCORRECT:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO, "Login Incorrect");
 				gdk_threads_leave();
-
 				break;
 			}
 
-			case 102:	// GIF_SUCCESS_ADD_CONTACTS
+			case GIF_SUCCESS_ADD_CONTACTS:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO, "Your new contact has been successfully added");
@@ -382,7 +378,7 @@ void gif_receive_messages(void *server)
 				break;
 			}
 
-			case 103:	// GIF_ERROR_ADD_CONTACTS
+			case GIF_ERROR_ADD_CONTACTS:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"The contact id you entered does not belong to a gchat user");
@@ -391,7 +387,7 @@ void gif_receive_messages(void *server)
 				break;
 			}
 
-			case 104:	// GIF_SUCCESS_DELETE_CONTACTS
+			case GIF_SUCCESS_DELETE_CONTACTS:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"Deleted. See the new list after you re-login");
@@ -400,7 +396,7 @@ void gif_receive_messages(void *server)
 				break;
 			}
 
-			case 105:	// GIF_ERROR_DELETE_CONTACTS_NOT_A_CONTACT
+			case GIF_ERROR_DELETE_CONTACTS_NOT_A_CONTACT:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"1. The id you entered is not in your contact list");
@@ -409,7 +405,7 @@ void gif_receive_messages(void *server)
 				break;
 			}
 
-			case 106:	// GIF_ERROR_DELETE_CONTACTS_NOT_A_MEMBER
+			case GIF_ERROR_DELETE_CONTACTS_NOT_A_MEMBER:
 			{
 				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"2. The id you entered is not in your contact list");
@@ -421,14 +417,16 @@ void gif_receive_messages(void *server)
 			}
 
 			if((gifheader->length) != 0)
-				free(gifdata);
+                        {
+                                free(gifdata);
+                        }
 			free(gifheader);
 			free(gifbuffer);
 
 			break;
 		}
 
-		case 10:		// GIF_OFFLINE_MESSAGE
+		case GIF_OFFLINE_MSG:
 		{
 			int counter;
 			char *message;
@@ -541,10 +539,15 @@ void gif_receive_messages(void *server)
 				// setting the status image for online clients and offline clients
 				gdk_threads_enter();
 				if(omsgs_se->new == 1)
-					img = gdk_pixbuf_new_from_file("../pixmaps/ok.png", NULL);
+                                {
+                                        get_full_path_name(PATHNAME,"ok.png",1,"client/pixmaps");
+                                        img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
+                                }
 				else
-					img =
-					        gdk_pixbuf_new_from_file("../pixmaps/kill.png", NULL);
+                                {
+                                        get_full_path_name(PATHNAME,"kill.png",1,"client/pixmaps");
+                                        img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
+                                }
 				gdk_threads_leave();
 
 				//Acquire a child iterator

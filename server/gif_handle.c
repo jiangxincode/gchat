@@ -3,14 +3,12 @@
 
 void gif_handle_client(void *client)
 {
-        int client_sockfd = *(int *)client;
+	int client_sockfd = *(int *)client;
 	gifhdr_t *gifheader;
 	int rcv_status;
 	char *gifdata, *gifbuffer;
 	char loginid[COMMON_LENGTH], password[COMMON_LENGTH];
 	char pathname[MAX_PATH_LENGTH];
-
-	pthread_t pthd = pthread_self(); //获取自身等线程ID
 
 	while(1)
 	{
@@ -20,16 +18,19 @@ void gif_handle_client(void *client)
 		if(rcv_status == -1)
 		{
 			_DEBUG("recv error");
-			pthread_cancel(pthd);
-			return;
+			pthread_exit(NULL);
 		}
-		else if(rcv_status == 0)
+		else if(rcv_status == 0) //连接关闭
 		{
-			printf("%s disconnected.\n", loginid); //mark，此时还没有获得loginid
-			pthread_cancel(pthd);
-			return;
+			printf("%s disconnected.\n", loginid);
+			pthread_exit(NULL);
 		}
 		gifheader = (gifhdr_t *) malloc(sizeof(gifhdr_t));
+		if(gifheader == NULL) //分配空间错误
+		{
+			_DEBUG("malloc error");
+			pthread_exit(NULL);
+		}
 		memcpy(gifheader, gifbuffer, HEADER_LENGTH);
 		if((gifheader->length) > 0)
 		{
@@ -37,12 +38,10 @@ void gif_handle_client(void *client)
 			memcpy(gifdata , (gifbuffer + HEADER_LENGTH), gifheader->length);
 		}
 		else
-                {
-                        _DEBUG("gifheader->length<=0");
-			pthread_cancel(pthd);
-			return;
-
-                }
+		{
+			display_header(gifheader);
+		}
+		free(gifbuffer);
 
 		switch(gifheader->type)
 		{
@@ -57,15 +56,6 @@ void gif_handle_client(void *client)
 			char *ptr, *gifbufferS;
 			FILE *usersfp;
 
-			get_full_path_name(pathname,"users.db",1,"server/db/");
-			usersfp = fopen(pathname,"r");
-			if(usersfp == NULL)
-			{
-				_DEBUG("error: open users.db");
-				pthread_cancel(pthd);
-				return;
-			}
-
 			ptr = (char *)strstr(gifdata, "#*&");
 			loginlength = ptr - gifdata; //获取loginid的长度
 			ptr = ptr + 3;
@@ -79,14 +69,19 @@ void gif_handle_client(void *client)
 			strncpy(password, (gifdata + loginlength + 3), passlength);
 			*(loginid + loginlength) = '\0';
 			*(password + passlength) = '\0';
-
 			if((gifheader->length) != 0)
 			{
 				free(gifdata);
 			}
 			free(gifheader);
-			free(gifbuffer);
 
+			get_full_path_name(pathname,"users.db",1,"server/db/");
+			usersfp = fopen(pathname,"r");
+			if(usersfp == NULL)
+			{
+				_DEBUG("error: open users.db");
+				pthread_exit(NULL);
+			}
 			while((fread(&usr, sizeof(users_t), 1, usersfp)) == 1) //读取users.db，匹配用户名和密码
 			{
 				if(((strcmp(usr.loginid,loginid)) == 0) && ((strcmp(usr.password,password)) == 0))
@@ -101,38 +96,33 @@ void gif_handle_client(void *client)
 				online_users_t ousr;
 				user_contacts_t usrc;
 				FILE *onlinefp, *as_contactfp;
-
 				printf("%s - Login Correct\n", loginid);
-
-				get_full_path_name(pathname,"online.db",1,"server/db/");
-				onlinefp = fopen(pathname, "a+");
-				if(onlinefp == NULL)
-				{
-					_DEBUG("error: open online.db");
-					pthread_cancel(pthd);
-					return;
-				}
 
 				strcpy(ousr.loginid, loginid);
 				ousr.sockfd = client_sockfd;
 
 				// adding the name to the online users list file
+				get_full_path_name(pathname,"online.db",1,"server/db/");
+				onlinefp = fopen(pathname, "a+"); //如果不存在则新建，同时既要读又要写
+				if(onlinefp == NULL)
+				{
+					_DEBUG("error: open online.db");
+					pthread_exit(NULL);
+				}
 				fwrite(&ousr, sizeof(online_users_t), 1, onlinefp);
 
-				// funcion for sending the contacts list to the client
+				// 发送该登录用户的联系人状态信息
 				gif_send_clients_contact_list(loginid, client_sockfd, 0);
 
-				// coding for refresing the contacts list of clients who has this just logined client as a contact
+				/**检查以该登录用户为联系人的用户是否在线，如果在，则向其更新在线联系人信息*/
 				get_full_path_name(pathname,"_as.db",2,"server/db/",loginid);
 				as_contactfp = fopen(pathname, "r");
 				if(as_contactfp == NULL)
 				{
 					_DEBUG("error: _as.db");
-					pthread_cancel(pthd);
-					return;
+					pthread_exit(NULL);
 				}
 
-				/**检查以该登录用户为联系人的用户是否在线，如果在，则向其更新在线联系人信息*/
 				while((fread(&usrc, sizeof(user_contacts_t), 1, as_contactfp)) == 1)
 				{
 					rewind(onlinefp);
@@ -150,8 +140,6 @@ void gif_handle_client(void *client)
 			else //用户名或密码不匹配
 			{
 				printf("%s : %s - Login Incorrect\n", loginid, password);
-
-				// unauthorised person
 				gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
 				gifheaderS->type = GIF_SUCCESS_N_ERROR_MSG;
 				strcpy(gifheaderS->sender, "server");
@@ -165,12 +153,11 @@ void gif_handle_client(void *client)
 				if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 				{
 					_DEBUG("error:send GIF_SUCCESS_N_ERROR_MSG");
+					pthread_exit(NULL);
 				}
 
 				free(gifbufferS);
 				free(gifheaderS);
-
-				pthread_cancel(pthd);
 			}
 			break;
 		}
@@ -189,17 +176,15 @@ void gif_handle_client(void *client)
 			if(contactsfp == NULL)
 			{
 				_DEBUG("error: open .db");
-				pthread_cancel(pthd);
-				return;
+				pthread_exit(NULL);
 			}
 
-                        get_full_path_name(pathname,"users.db",1,"server/db/");
+			get_full_path_name(pathname,"users.db",1,"server/db/");
 			usersfp = fopen(pathname, "r");
 			if(usersfp == NULL)
 			{
 				_DEBUG("error:open users.db");
-				pthread_cancel(pthd);
-				return;
+				pthread_exit(NULL);
 			}
 
 			while((fread(&usr, sizeof(users_t), 1, usersfp)) == 1)
@@ -224,8 +209,7 @@ void gif_handle_client(void *client)
 				if(as_contactfp == NULL)
 				{
 					_DEBUG("error: open _as.db");
-					pthread_cancel(pthd);
-					return;
+					pthread_exit(NULL);
 				}
 				strcpy(usrc.loginid, gifheader->sender);
 				fwrite(&usrc, sizeof(user_contacts_t), 1, as_contactfp);
@@ -269,7 +253,6 @@ void gif_handle_client(void *client)
 			if((gifheader->length) != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
@@ -290,8 +273,7 @@ void gif_handle_client(void *client)
 			if(usersfp == NULL)
 			{
 				_DEBUG("A user's contact file");
-				pthread_cancel(pthd);
-				return;
+				pthread_exit(NULL);
 			}
 
 			while((fread(&usr, sizeof(users_t), 1, usersfp)) == 1)
@@ -308,8 +290,7 @@ void gif_handle_client(void *client)
 			if(contactsfp == NULL)
 			{
 				_DEBUG("A user's contact file");
-				pthread_cancel(pthd);
-				return;
+				pthread_exit(NULL);
 			}
 
 			if(flag == 1) //要删除等联系人在用户数据库中
@@ -337,7 +318,7 @@ void gif_handle_client(void *client)
 				if(as_contactfp == NULL)
 				{
 					_DEBUG("A user's as_contact file");
-					exit(0);
+					pthread_exit(NULL);
 				}
 
 				get_full_path_name(pathname_temp,"as_contacts_delete_temp.db",1,"server/db/");
@@ -410,7 +391,6 @@ void gif_handle_client(void *client)
 			if((gifheader->length) != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
@@ -428,8 +408,7 @@ void gif_handle_client(void *client)
 			if((onlinefp = fopen(pathname, "r")) == NULL)
 			{
 
-				pthread_cancel(pthd);
-				return;
+				pthread_exit(NULL);
 			}
 
 			// retreving the socket file descriptor for the receiving client from the online.db file
@@ -477,7 +456,7 @@ void gif_handle_client(void *client)
 				if(offlinefp == NULL)
 				{
 					_DEBUG("Offline Messages file");
-					exit(0);
+					pthread_exit(NULL);
 				}
 
 				fwrite(&omsgs, sizeof(offline_msgs_t), 1, offlinefp);
@@ -489,7 +468,6 @@ void gif_handle_client(void *client)
 			if((gifheader->length) != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
@@ -525,7 +503,7 @@ void gif_handle_client(void *client)
 			if(as_contactfp == NULL)
 			{
 				_DEBUG("A user's as_contact file");
-				exit(0);
+				pthread_exit(NULL);
 			}
 
 			while((fread(&usrc, sizeof(user_contacts_t), 1, as_contactfp)) == 1)
@@ -545,7 +523,6 @@ void gif_handle_client(void *client)
 			if(gifheader->length != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
@@ -565,7 +542,7 @@ void gif_handle_client(void *client)
 			if((offlinefp = fopen(pathname, "r+")) == NULL)
 			{
 				_DEBUG("A user's offline messages file");
-				exit(0);
+				pthread_exit(NULL);
 			}
 
 			gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
@@ -649,7 +626,6 @@ void gif_handle_client(void *client)
 			if(gifheader->length != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
@@ -679,89 +655,15 @@ void gif_handle_client(void *client)
 			if(gifheader->length != 0)
 				free(gifdata);
 			free(gifheader);
-			free(gifbuffer);
 
 			break;
 		}
+		default :
+			break;
 		}
+
 	}
 }
 
-// type = 0 (sending the contacts list while normal login)
-// type = 1(sending the contacts list while refresing)
-void gif_send_clients_contact_list(char *client_loginid, int client_sockfd, int type)
-{
-	char pathname[MAX_PATH_LENGTH];
-	gifhdr_t *gifheaderS;
-	char *gifdataS, *gifbufferS;
-	online_users_t ousr;
-	user_contacts_t usrc;
-	user_status_t *usrs;
-	FILE *contactsfp, *onlinefp;
-	int i;
 
-        get_full_path_name(pathname,".db",2,"server/db/",client_loginid);
-	contactsfp = fopen(pathname,"r");
-	if(contactsfp == NULL)
-	{
-		_DEBUG("A user's contacts file");
-		exit(0);
-	}
-
-        get_full_path_name(pathname,"online.db",1,"server/db/");
-	onlinefp = fopen(pathname, "r");
-	if(onlinefp == NULL)
-	{
-		_DEBUG("online.db");
-		exit(0);
-	}
-
-	gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
-	gifheaderS->type = GIF_ADDRLIST_MSG;
-	strcpy(gifheaderS->sender, "server");
-	strcpy(gifheaderS->receiver, client_loginid);
-	gifheaderS->reserved = 0;
-	if(type == 1)
-		gifheaderS->reserved = 1;
-
-	gifdataS = (char *) malloc(BODY_LENGTH);
-	gifbufferS = (char *) malloc(BUFF_SIZE);
-	usrs = (user_status_t *) malloc(sizeof(user_status_t));
-
-	i = 0;
-	while((fread(&usrc, sizeof(user_contacts_t), 1, contactsfp)) == 1)
-	{
-		strcpy(usrs->loginid, usrc.loginid);
-		// initialising status of the user to be offline
-		usrs->status = 0;
-
-		rewind(onlinefp);
-		while((fread(&ousr, sizeof(online_users_t), 1, onlinefp)) == 1)
-		{
-			if((strcmp(ousr.loginid, usrs->loginid)) == 0)
-				usrs->status = 1;	// setting status to online
-			else
-				continue;
-		}
-
-		memcpy((gifdataS + (i * sizeof(user_status_t))), usrs, sizeof(user_status_t));
-		i++;
-	}
-	fclose(onlinefp);
-	fclose(contactsfp);
-
-	gifheaderS->length = (i * (sizeof(user_status_t)));
-	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
-	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
-
-	if((send(client_sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
-	{
-		_DEBUG("Error sending message(Address list)");
-	}
-
-	free(usrs);
-	free(gifbufferS);
-	free(gifdataS);
-	free(gifheaderS);
-}
 

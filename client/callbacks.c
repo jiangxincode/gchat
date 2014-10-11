@@ -20,9 +20,10 @@ GtkTreeIter offline_selected_iter;
 GtkTreeModel *offline_selected_model;
 
 contacts_chat_window_id_t *head;
+
 struct sockaddr_in servAddr;
 int sockfd;
-char client_loginid[25];
+char client_loginid[COMMON_LENGTH];
 int offline_messages_count;
 
 
@@ -174,7 +175,7 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 {
 	pthread_t pthd;
 	gifhdr_t *gifheaderS;
-	char *gifdataS, *gifbufferS, *errormsg;
+	char *gifdataS, *gifbufferS;
 
 	GtkWidget *loginid = lookup_widget(GTK_WIDGET(button), "entUserid");
 	GtkWidget *password = lookup_widget(GTK_WIDGET(button), "entPass");
@@ -192,24 +193,21 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd < 0)
 	{
-		errormsg = strerror(errno);
-		message_dialog(GTK_MESSAGE_ERROR, errormsg);
+		message_dialog(GTK_MESSAGE_ERROR, strerror(errno));
 		return;
 	}
 	//connect to the server
 	if((connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr)))< 0)
 	{
-		errormsg = strerror(errno);
-		message_dialog(GTK_MESSAGE_ERROR, errormsg);
+		message_dialog(GTK_MESSAGE_ERROR, strerror(errno));
 		return;
 	}
 
 	gifheaderS = (gifhdr_t *) malloc(sizeof(gifhdr_t));
 	gifheaderS->type = GIF_LOGIN_MSG;
-	strcpy(gifheaderS->sender, gtk_entry_get_text(GTK_ENTRY(loginid))); //mark
-	strcpy(gifheaderS->receiver, "server"); //mark
+	strcpy(gifheaderS->sender, gtk_entry_get_text(GTK_ENTRY(loginid)));
+	strcpy(gifheaderS->receiver, "server");
 	gifheaderS->reserved = 0;
-
 
 	gifdataS =(char *) malloc(strlen(gtk_entry_get_text(GTK_ENTRY(loginid))) +
 	                          strlen(gtk_entry_get_text(GTK_ENTRY(password))) + 4);
@@ -218,15 +216,13 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 	strcat(gifdataS, gtk_entry_get_text(GTK_ENTRY(password)));
 	gifheaderS->length = strlen(gifdataS) + 1;
 
-
 	gifbufferS = (char *) malloc(HEADER_LENGTH + gifheaderS->length);
 	memcpy(gifbufferS, gifheaderS, HEADER_LENGTH);
 	memcpy((gifbufferS + HEADER_LENGTH), gifdataS, gifheaderS->length);
 
 	if((send(sockfd, gifbufferS, (HEADER_LENGTH + gifheaderS->length), 0)) < 0)
 	{
-		errormsg = strerror(errno);
-		message_dialog(GTK_MESSAGE_ERROR, errormsg);
+		message_dialog(GTK_MESSAGE_ERROR, strerror(errno));
 	}
 
 	free(gifheaderS);
@@ -235,12 +231,11 @@ void on_butOk_clicked(GtkButton * button, gpointer user_data)
 
 	if(pthread_create(&pthd, NULL, (void *) gif_receive_messages, (void *) &sockfd) != 0)
 	{
-		errormsg = strerror(errno);
-		message_dialog(GTK_MESSAGE_ERROR, errormsg);
+		message_dialog(GTK_MESSAGE_ERROR, strerror(errno));
 	}
 	pthread_detach(pthd);
 
-	gtk_widget_destroy(authen);
+	gtk_widget_destroy(authen); //mark为什么不退出？
 }
 
 
@@ -257,8 +252,7 @@ gif_select_offline_messages(GtkTreeSelection * selection, gpointer data)
 }
 
 
-void
-gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data)
+void gif_call_client_for_chat(GtkTreeSelection * selection, gpointer data)
 {
 	contacts_chat_window_id_t *ptr;
 	GtkTreeIter iter;
@@ -518,9 +512,7 @@ on_butAddContactsCancel_clicked(GtkButton * button, gpointer user_data)
 	gtk_widget_destroy(widget);
 }
 
-
-void
-on_butOfflineDelete_clicked(GtkButton * button, gpointer user_data)
+void on_butOfflineDelete_clicked(GtkButton * button, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
 	char *gifdataS, *gifbufferS, *errormsg;
@@ -562,8 +554,7 @@ on_butOfflineDelete_clicked(GtkButton * button, gpointer user_data)
 }
 
 
-void
-on_butOfflineClose_clicked(GtkButton * button, gpointer user_data)
+void on_butOfflineClose_clicked(GtkButton * button, gpointer user_data)
 {
 	gtk_widget_destroy(offline);
 }
@@ -575,8 +566,7 @@ void on_Add(GtkWidget *menuitem, gpointer user_data)
 }
 
 
-void
-on_mnuDelete_activate(GtkMenuItem * menuitem, gpointer user_data)
+void on_mnuDelete_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *widget;
 	widget = create_AddContacts();
@@ -585,8 +575,7 @@ on_mnuDelete_activate(GtkMenuItem * menuitem, gpointer user_data)
 }
 
 
-void
-on_Offline(GtkWidget * widget, gpointer user_data)
+void on_Offline(GtkWidget * widget, gpointer user_data)
 {
 	gifhdr_t *gifheaderS;
 	char *gifbufferS, *errormsg;

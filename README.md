@@ -57,6 +57,10 @@ http://opensource.org/licenses/lgpl-3.0.html
 * Version 1.17
     * 修改本README文件。
     * 删除material文件夹中资料文件。
+* Version 1.18
+    * 对文件路径长度的定义更加严格。
+    * 对线程的使用更加严谨。
+    * 删除无用log文件
     
 将要修复等问题：
 
@@ -69,6 +73,9 @@ http://opensource.org/licenses/lgpl-3.0.html
 * 中文化完善。
 * 实现类似QQ的自动隐藏功能。
 * 解决当用户不正常下线时对online.db的处理。
+* 当用户输入不合理时要在提交之前进行提醒。
+* 添加联系人时如果重复时要提示，并停止添加。
+* 打开联系人对话框时需要双击而不是单击。
 
 待学习知识：
 

@@ -23,7 +23,7 @@
 //
 
 
-#define MAX_PATH_LENGTH 255 //the max length of the pathname(filename included)
+#define MAX_PATH_LENGTH (sysconf(_PC_PATH_MAX)+sysconf(_PC_NAME_MAX)) //the max length of the pathname(filename included)
 #define SERVER_PORT 9028
 #define COMMON_LENGTH 20
 #define BUFF_SIZE 1024

@@ -3,6 +3,7 @@
 *.cbp
 *.depend
 *.layout
+*.bmarks
 
 log/
 
