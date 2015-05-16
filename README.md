@@ -1,18 +1,20 @@
-# gchat #
+# gchat
     
-* VERAION:    **0.01**
-* AUTHOR:    **jiangxin**
-* Email:    **jiangxinnju@163.com**
-* Copyright (c) 2014, **jiangxin**
+A IM program runs on Linux, based on gnome, GTK+, C and MySQL.
 
-一个Linux上等聊天工具。
+If you have some advises, please tell me, open a issue, give me a pull request, or send me a email.
 
-本软件遵循LGPL V3，license见：
++ Aloys
++ jiangxinnju@163.com
+
+## License
+
+LGPL V3, see it on:
 
 http://opensource.org/licenses/lgpl-3.0.html
 
 
-日志：
+## Update Log
 
 * Version 0.01-0.XX 2013年完成初步框架。
 * Version 1.01 重新开始完善，重组了软件构架，清理了不必要文件，增强了系统鲁棒性，代码等可读性。
@@ -62,7 +64,7 @@ http://opensource.org/licenses/lgpl-3.0.html
     * 对线程的使用更加严谨。
     * 删除无用log文件
     
-将要修复等问题：
+## TODO
 
 * 减少服务器端对用户信息等处理，提高自动化。
 * 解决用户处理过程中等海量用户处理问题。
@@ -76,37 +78,28 @@ http://opensource.org/licenses/lgpl-3.0.html
 * 当用户输入不合理时要在提交之前进行提醒。
 * 添加联系人时如果重复时要提示，并停止添加。
 * 打开联系人对话框时需要双击而不是单击。
-
-待学习知识：
-
 * gdk线程运行机制。
 * MySQL数据库与GTK+的接口。
 
-* 编译条件与方式
+## Compile and Install
 
-    * 编译条件
-        * 系统具有gnome开发环境。
-        * 使用gcc编译器或者codeblocks等使用gcc为编译器的集成开发环境。
-        * 安装有ncurses/mysql库(运行环境和开发环境)
+* 编译条件
+    * 系统具有gnome开发环境。
+    * 使用gcc编译器或者codeblocks等使用gcc为编译器的集成开发环境。
+    * 安装有ncurses/mysql库(运行环境和开发环境)
+
+* 使用以下方式加载gnome库：
+    * `pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`
+    * `pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`
     
-    * 使用以下方式加载gnome库：
-        * `pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`
-        * `pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`
-        
-    * 使用以下方式加载ncurses库：
-        * -lncurses
-        
-    * 使用以下方式加载MySQL库：
-        * `mysql_config --cflags`
-        * `mysql_config --libs`
+* 使用以下方式加载ncurses库：
+    * `-lncurses`
     
+* 使用以下方式加载MySQL库：
+    * `mysql_config --cflags`
+    * `mysql_config --libs`
 
-<img src="" />
-
-
-～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
-
-数据文件说明：
+##  Data Files List
 
 * users.db:用户信息数据文件，该文件保存了用户的loginid和password
 * online.db:在线用户数据文件，该文件保存了当前在线用户的loginid和socket信息
