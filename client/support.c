@@ -53,7 +53,7 @@ void gif_receive_messages(void *server)
 			message_dialog(GTK_MESSAGE_INFO, "Server Disconnected");
 			gdk_threads_leave();
 
-			while(head != NULL) //关闭所有打开的聊天窗口
+			while(head != NULL) // freeing the allocated spaces for linked list
 			{
 				ptr = head;
 				head = head->next;
@@ -124,7 +124,7 @@ void gif_receive_messages(void *server)
 				gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
 				gdk_threads_leave();
 
-				while(head != NULL) //关闭所有已经打开的窗口
+				while(head != NULL) // freeing the allocated spaces for linked list
 				{
 					ptr = head;
 					head = head->next;
@@ -171,21 +171,14 @@ void gif_receive_messages(void *server)
 			//creating first column
 			gdk_threads_enter();
 			renderer = gtk_cell_renderer_pixbuf_new();
-			column =
-			        gtk_tree_view_column_new_with_attributes("Status",
-			                        renderer,
-			                        "pixbuf",
-			                        STATUS_COLUMN_PIXMAP,
-			                        NULL);
+			column = gtk_tree_view_column_new_with_attributes("Status", renderer, "pixbuf", STATUS_COLUMN_PIXMAP, NULL);
 			gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
 			gdk_threads_leave();
 
 			//creating second column
 			gdk_threads_enter();
 			renderer = gtk_cell_renderer_text_new();
-			column =
-			        gtk_tree_view_column_new_with_attributes
-			        ("Contacts", renderer, "text", CONTACTS_COLUMN_TEXT, NULL);
+			column = gtk_tree_view_column_new_with_attributes("Contacts", renderer, "text", CONTACTS_COLUMN_TEXT, NULL);
 			gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
 			gdk_threads_leave();
 
@@ -193,11 +186,13 @@ void gif_receive_messages(void *server)
 			gdk_threads_enter();
 			gtk_tree_store_append(store, &parent_iter, NULL);
 			if(gifheader->length != 0)
-				gtk_tree_store_set(store, &parent_iter,
-				                   CONTACTS_COLUMN_TEXT, "Available", -1);
+                        {
+                                gtk_tree_store_set(store, &parent_iter, CONTACTS_COLUMN_TEXT, "Available", -1);
+                        }
 			else
-				gtk_tree_store_set(store, &parent_iter,
-				                   CONTACTS_COLUMN_TEXT, "Not Available", -1);
+                        {
+                                gtk_tree_store_set(store, &parent_iter, CONTACTS_COLUMN_TEXT, "Not Available", -1);
+                        }
 			gdk_threads_leave();
 
 			i = counter = 0;
@@ -206,14 +201,10 @@ void gif_receive_messages(void *server)
 			{
 				contacts_chat_window_id_t *ptr;
 
-				memcpy(usrs,
-				       (gifdata + (i * sizeof(user_status_t))),
-				       sizeof(user_status_t));
+				memcpy(usrs, (gifdata + (i * sizeof(user_status_t))), sizeof(user_status_t));
 
 				// setting the window id for each contacts and constructing a linked list
-				ptr =
-				        (contacts_chat_window_id_t *)
-				        malloc(sizeof(contacts_chat_window_id_t));
+				ptr = (contacts_chat_window_id_t *) malloc(sizeof(contacts_chat_window_id_t));
 				strcpy(ptr->contacts_name, usrs->loginid);
 				ptr->window_id = i;
 				ptr->window_open = 0;
@@ -230,13 +221,11 @@ void gif_receive_messages(void *server)
 
 				// setting the status image for online clients and offline clients
 				gdk_threads_enter();
-
 				if(usrs->status == 1)
                                 {
                                         get_full_path_name(PATHNAME,"ok.png",1,"client/pixmaps");
                                         img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
                                 }
-
 				else
                                 {
                                         get_full_path_name(PATHNAME,"kill.png",1,"client/pixmaps");
@@ -247,10 +236,7 @@ void gif_receive_messages(void *server)
 				//Acquire a child iterator
 				gdk_threads_enter();
 				gtk_tree_store_append(store, &child_iter, &parent_iter);
-				gtk_tree_store_set(store, &child_iter,
-				                   CONTACTS_COLUMN_TEXT,
-				                   usrs->loginid,
-				                   STATUS_COLUMN_PIXMAP, img, -1);
+				gtk_tree_store_set(store, &child_iter, CONTACTS_COLUMN_TEXT, usrs->loginid, STATUS_COLUMN_PIXMAP, img, -1);
 				gdk_threads_leave();
 
 				i++;
@@ -267,12 +253,13 @@ void gif_receive_messages(void *server)
 			gdk_threads_enter();
 			select = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 			gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
-			g_signal_connect(G_OBJECT(select), "changed",
-			                 G_CALLBACK(gif_call_client_for_chat), NULL);
+			g_signal_connect(G_OBJECT(select), "changed", G_CALLBACK(gif_call_client_for_chat), NULL);
 			gdk_threads_leave();
 
 			if((gifheader->length) != 0)
-				free(gifdata);
+                        {
+                                free(gifdata);
+                        }
 			free(gifheader);
 			free(gifbuffer);
 
@@ -441,74 +428,54 @@ void gif_receive_messages(void *server)
 			GdkPixbuf *img;
 			gdk_threads_leave();
 
-			if(gifheader->reserved == 1)
+			if(gifheader->reserved == 1) //刷新联系人在线状态
 			{
 				offline_messages_count = 0;
 
 				//creating a model
 				gdk_threads_enter();
-				store =
-				        gtk_list_store_new(OFFLINE_COLUMNS,
-				                           GDK_TYPE_PIXBUF,
-				                           G_TYPE_STRING,
-				                           G_TYPE_STRING, G_TYPE_STRING);
+				store = gtk_list_store_new(OFFLINE_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 				offline_temp_store = store;
 				gdk_threads_leave();
 
 				//creating a view
 				gdk_threads_enter();
-				offline_tree =
-				        gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+				offline_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
 				gdk_threads_leave();
 
 				//adding the view to the scrolledwindow
 				gdk_threads_enter();
-				gtk_container_add(GTK_CONTAINER(scrolledwindow4),
-				                  offline_tree);
+				gtk_container_add(GTK_CONTAINER(scrolledwindow4), offline_tree);
 				gdk_threads_leave();
 
 				//creating first column
 				gdk_threads_enter();
 				renderer = gtk_cell_renderer_pixbuf_new();
-				column =
-				        gtk_tree_view_column_new_with_attributes
-				        ("New/Old", renderer, "pixbuf", OFFLINE_NEW_PIXMAP, NULL);
-				gtk_tree_view_append_column(GTK_TREE_VIEW
-				                            (offline_tree), column);
+				column = gtk_tree_view_column_new_with_attributes("New/Old", renderer, "pixbuf", OFFLINE_NEW_PIXMAP, NULL);
+				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
 				gdk_threads_leave();
 
 				//creating second column
 				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
 				g_object_set(G_OBJECT(renderer), "foreground", "red", NULL);
-				column =
-				        gtk_tree_view_column_new_with_attributes
-				        ("From", renderer, "text", OFFLINE_SENDER_TEXT, NULL);
-				gtk_tree_view_append_column(GTK_TREE_VIEW
-				                            (offline_tree), column);
+				column = gtk_tree_view_column_new_with_attributes("From", renderer, "text", OFFLINE_SENDER_TEXT, NULL);
+				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
 				gdk_threads_leave();
 
 				//creating third column
 				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
-				g_object_set(G_OBJECT(renderer), "foreground",
-				             "dark green", NULL);
-				column =
-				        gtk_tree_view_column_new_with_attributes
-				        ("Date & Time", renderer, "text",
-				         OFFLINE_DATESERIAL_TEXT, NULL);
-				gtk_tree_view_append_column(GTK_TREE_VIEW
-				                            (offline_tree), column);
+				g_object_set(G_OBJECT(renderer), "foreground", "dark green", NULL);
+				column = gtk_tree_view_column_new_with_attributes("Date & Time", renderer, "text",OFFLINE_DATESERIAL_TEXT, NULL);
+				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
 				gdk_threads_leave();
 
 				//creating fourth column
 				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
-				column =
-				        gtk_tree_view_column_new_with_attributes
-				        ("Message", renderer, "text", OFFLINE_MSG_TEXT, NULL);
-				gtk_tree_view_append_column(GTK_TREE_VIEW
-				                            (offline_tree), column);
+				column = gtk_tree_view_column_new_with_attributes("Message", renderer, "text", OFFLINE_MSG_TEXT, NULL);
+				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
 				gdk_threads_leave();
 			}
 			else
