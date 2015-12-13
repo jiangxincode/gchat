@@ -107,3 +107,7 @@ http://opensource.org/licenses/lgpl-3.0.html
 * $(loginid)_as.db:被添加为好友文件，该文件保存了有哪些用户把当前用户添加为好友
 * $(loginid)_off.db:离线消息存储文件，该文件保存了其他用户发给当前用户的离线消息
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jiangxincode/gchat/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
