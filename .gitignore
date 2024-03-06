@@ -1,16 +1,10 @@
 *~
 *.swp
+*.cbp
 *.depend
 *.layout
 *.bmarks
 
 log/
-
-client/bin/
-client/obj/
-client/ValgrindOut.xml
-
-server/bin/
-server/obj/
-server/db/
+build/
 
