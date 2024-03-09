@@ -10,8 +10,7 @@ int display_user();
 int delete_user();
 int empty(const char *filename);
 int user_exist(const char *filename, const char *new_user);
-int  password(char *dest);
-char* get_passwd(char *passwd);
+int password(char *dest);
+char *get_passwd(char *passwd);
 
 #endif // MAIN_H
-
