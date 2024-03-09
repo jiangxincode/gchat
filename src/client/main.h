@@ -55,7 +55,7 @@ void on_butClear_clicked(GtkButton       *button, gpointer         user_data);
 void on_butOk_clicked(GtkButton       *button, gpointer         user_data);
 void on_butSend_clicked(GtkButton       *button, gpointer         user_data);
 void on_entInput_activate(GtkEntry        *entry, gpointer         user_data);
-void on_Chat_destroy(GtkObject       *object, gpointer         user_data);
+void on_Chat_destroy(GtkWidget       *object, gpointer         user_data);
 void on_entInput_activate(GtkEntry        *entry, gpointer         user_data);
 void on_butAddContactsCancel_clicked(GtkButton       *button, gpointer         user_data);
 void on_butAddContactsOk_clicked(GtkButton       *button, gpointer         user_data);

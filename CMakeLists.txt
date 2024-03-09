@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD 11)
 include_directories(include)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GNOME IMPORTED_TARGET libgnome-2.0 libgnomeui-2.0)
-if (GNOME_FOUND)
+pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
+if (GTK3_FOUND)
     add_executable(client
         src/client/callbacks.c
         src/client/interface.c
@@ -16,7 +16,7 @@ if (GNOME_FOUND)
         src/client/support.c
         src/common/common.c
         src/common/common.h)
-    target_link_libraries(client PRIVATE PkgConfig::GNOME ncurses)
+    target_link_libraries(client PRIVATE PkgConfig::GTK3 ncurses)
 
     add_executable(server
         src/server/main.c
@@ -26,6 +26,6 @@ if (GNOME_FOUND)
         src/server/gif_handle.c
         src/common/common.c
         src/common/common.h)
-    target_link_libraries(server PRIVATE PkgConfig::GNOME ncurses)
+    target_link_libraries(server PRIVATE PkgConfig::GTK3 ncurses)
 endif ()
 

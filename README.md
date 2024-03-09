@@ -1,6 +1,6 @@
 # gchat
     
-A IM program runs on Linux, based on gnome, GTK+, C and MySQL.
+A IM program runs on Linux, based on GTK+, C and MySQL.
 
 If you have some advises, please tell me, open a issue, give me a pull request, or send me a email.
 
@@ -89,8 +89,8 @@ http://opensource.org/licenses/lgpl-3.0.html
     * 安装有ncurses/mysql库(运行环境和开发环境)
 
 * 使用以下方式加载gnome库：
-    * `pkg-config libgnome-2.0 libgnomeui-2.0 --cflags`
-    * `pkg-config  libgnome-2.0 libgnomeui-2.0 --libs`
+    * `pkg-config gtk+-3.0 --cflags`
+    * `pkg-config gtk+-3.0 --libs`
     
 * 使用以下方式加载ncurses库：
     * `-lncurses`

@@ -103,19 +103,19 @@ void on_mnuAbout_activate(GtkMenuItem * menuitem, gpointer user_data)
 
 	char pathname[MAX_PATH_LENGTH];
 	strcpy(pathname,COMMON_PATH_PREFIX);
-	strcat(pathname,"client/pixmaps/icon.png");
+	strcat(pathname,"src/client/pixmaps/icon.png");
 	gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG(about), create_pixbuf(pathname));
 
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG(about), "Version 1.10");
 	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG(about), "Copyright @ jiangxin, 2014");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG(about), "https://github.com/jiangxincode");
-	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(about),"gchat");
+	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about),"gchat");
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about),"Good");
 	gchar license[BUFSIZ*100] = "\0"; //LGPL低于100行
 	gchar temp[BUFSIZ];
 	FILE *fp;
 	strcpy(pathname,COMMON_PATH_PREFIX);
-	strcat(pathname,"common/license");
+	strcat(pathname,"LICENSE");
 	if((fp=fopen(pathname,"r")) == NULL)
         {
                 _DEBUG("error:open license");
@@ -372,7 +372,7 @@ on_butSend_clicked(GtkButton * button, gpointer user_data)
 
 
 void
-on_Chat_destroy(GtkObject * object, gpointer user_data)
+on_Chat_destroy(GtkWidget * object, gpointer user_data)
 {
 	contacts_chat_window_id_t *ptr;
 	GtkWidget *window;

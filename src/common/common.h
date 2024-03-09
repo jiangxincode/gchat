@@ -15,7 +15,7 @@
 #include <netdb.h>
 #include <pthread.h>
 
-#include <gnome.h>
+#include <gtk/gtk.h>
 
 #include <ncurses.h>
 
@@ -27,7 +27,7 @@
 #define SERVER_PORT 9028
 #define COMMON_LENGTH 20
 #define BUFF_SIZE 1024
-#define COMMON_PATH_PREFIX "/home/jiangxin/temp/gchat/"
+#define COMMON_PATH_PREFIX "/home/jiangxin/Code/gchat/"
 
 
 #define GIF_LOGIN_MSG 1			//用户登录

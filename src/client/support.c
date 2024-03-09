@@ -39,9 +39,7 @@ void gif_receive_messages(void *server)
 
 		if(rcv_status < 0) //发生错误
 		{
-			gdk_threads_enter();
 			message_dialog(GTK_MESSAGE_INFO, strerror(errno));
-			gdk_threads_leave();
 			pthread_cancel(pthd); //非正常退出
 		}
 		else if(rcv_status == 0) //断开连接
@@ -49,9 +47,7 @@ void gif_receive_messages(void *server)
 			contacts_chat_window_id_t *ptr;
 			GtkWidget *widget;
 
-			gdk_threads_enter();
 			message_dialog(GTK_MESSAGE_INFO, "Server Disconnected");
-			gdk_threads_leave();
 
 			while(head != NULL) // freeing the allocated spaces for linked list
 			{
@@ -59,8 +55,6 @@ void gif_receive_messages(void *server)
 				head = head->next;
 				free(ptr);
 			}
-
-			gdk_threads_enter();
 
 			gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
 			widget = lookup_widget(gifmain, "butConnect");
@@ -81,8 +75,6 @@ void gif_receive_messages(void *server)
 			gtk_widget_set_sensitive(widget, FALSE);
 			widget = lookup_widget(gifmain, "mnuOffline");
 			gtk_widget_set_sensitive(widget, FALSE);
-
-			gdk_threads_leave();
 
 			pthread_cancel(pthd);
 		}
@@ -107,7 +99,6 @@ void gif_receive_messages(void *server)
 			user_status_t *usrs;
 			int i, counter;
 
-			gdk_threads_enter();
 			GtkWidget *widget;
 			GtkTreeStore *store;
 			GtkTreeViewColumn *column;
@@ -115,14 +106,11 @@ void gif_receive_messages(void *server)
 			GtkTreeIter parent_iter, child_iter;
 			GdkPixbuf *img;
 			GtkTreeSelection *select;
-			gdk_threads_leave();
 
 			if(gifheader->reserved == 1)
 			{
 				// removing the tree from the container for refresing
-				gdk_threads_enter();
 				gtk_container_remove(GTK_CONTAINER(scrolledwindow1), tree);
-				gdk_threads_leave();
 
 				while(head != NULL) // freeing the allocated spaces for linked list
 				{
@@ -132,7 +120,6 @@ void gif_receive_messages(void *server)
 				}
 			}
 
-			gdk_threads_enter();
 			widget = lookup_widget(gifmain, "butConnect");
 			gtk_widget_set_sensitive(widget, FALSE);
 			widget = lookup_widget(gifmain, "mnuConnect");
@@ -151,39 +138,27 @@ void gif_receive_messages(void *server)
 			gtk_widget_set_sensitive(widget, TRUE);
 			widget = lookup_widget(gifmain, "mnuOffline");
 			gtk_widget_set_sensitive(widget, TRUE);
-			gdk_threads_leave();
 
 			//creating a model
-			gdk_threads_enter();
 			store = gtk_tree_store_new(2, G_TYPE_STRING, GDK_TYPE_PIXBUF);
-			gdk_threads_leave();
 
 			//creating a view
-			gdk_threads_enter();
 			tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
-			gdk_threads_leave();
 
 			//adding the view to the scrolledwindow
-			gdk_threads_enter();
 			gtk_container_add(GTK_CONTAINER(scrolledwindow1), tree);
-			gdk_threads_leave();
 
 			//creating first column
-			gdk_threads_enter();
 			renderer = gtk_cell_renderer_pixbuf_new();
 			column = gtk_tree_view_column_new_with_attributes("Status", renderer, "pixbuf", STATUS_COLUMN_PIXMAP, NULL);
 			gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
-			gdk_threads_leave();
 
 			//creating second column
-			gdk_threads_enter();
 			renderer = gtk_cell_renderer_text_new();
 			column = gtk_tree_view_column_new_with_attributes("Contacts", renderer, "text", CONTACTS_COLUMN_TEXT, NULL);
 			gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
-			gdk_threads_leave();
 
 			//Acquire a top-level iterator
-			gdk_threads_enter();
 			gtk_tree_store_append(store, &parent_iter, NULL);
 			if(gifheader->length != 0)
                         {
@@ -193,7 +168,6 @@ void gif_receive_messages(void *server)
                         {
                                 gtk_tree_store_set(store, &parent_iter, CONTACTS_COLUMN_TEXT, "Not Available", -1);
                         }
-			gdk_threads_leave();
 
 			i = counter = 0;
 			usrs = (user_status_t *) malloc(sizeof(user_status_t));
@@ -220,7 +194,6 @@ void gif_receive_messages(void *server)
 				}
 
 				// setting the status image for online clients and offline clients
-				gdk_threads_enter();
 				if(usrs->status == 1)
                                 {
                                         get_full_path_name(PATHNAME,"ok.png",1,"client/pixmaps");
@@ -231,30 +204,23 @@ void gif_receive_messages(void *server)
                                         get_full_path_name(PATHNAME,"kill.png",1,"client/pixmaps");
                                         img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
                                 }
-				gdk_threads_leave();
 
 				//Acquire a child iterator
-				gdk_threads_enter();
 				gtk_tree_store_append(store, &child_iter, &parent_iter);
 				gtk_tree_store_set(store, &child_iter, CONTACTS_COLUMN_TEXT, usrs->loginid, STATUS_COLUMN_PIXMAP, img, -1);
-				gdk_threads_leave();
 
 				i++;
 				counter = i * sizeof(user_status_t);
 			}
 			free(usrs);
 
-			gdk_threads_enter();
 			gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
 			gtk_widget_show(tree);
-			gdk_threads_leave();
 
 			// signal handling for "changed" event
-			gdk_threads_enter();
 			select = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 			gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
 			g_signal_connect(G_OBJECT(select), "changed", G_CALLBACK(gif_call_client_for_chat), NULL);
-			gdk_threads_leave();
 
 			if((gifheader->length) != 0)
                         {
@@ -288,7 +254,6 @@ void gif_receive_messages(void *server)
 				GtkTextBuffer *buff;
 				ptr->window_open = 1;	// since the window is gonna be opened
 
-				gdk_threads_enter();
 				chat_window[ptr->window_id] = create_Chat();
 				widget =
 				        lookup_widget(chat_window[ptr->window_id], "entInput");
@@ -298,10 +263,8 @@ void gif_receive_messages(void *server)
 				                     (chat_window[ptr->window_id]),
 				                     gifheader->sender);
 				gtk_widget_show(chat_window[ptr->window_id]);
-				gdk_threads_leave();
 
 				// creating tags(foreground color) for the buffer
-				gdk_threads_enter();
 				widget =
 				        lookup_widget(chat_window[ptr->window_id], "txtDisplay");
 				buff = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
@@ -309,20 +272,16 @@ void gif_receive_messages(void *server)
 				                           "foreground", "red", NULL);
 				gtk_text_buffer_create_tag(buff, "blue_foreground",
 				                           "foreground", "blue", NULL);
-				gdk_threads_leave();
 			}
 
-			gdk_threads_enter();
 			display_text =
 			        lookup_widget(chat_window[ptr->window_id], "txtDisplay");
 			buff = gtk_text_view_get_buffer(GTK_TEXT_VIEW(display_text));
 			gtk_text_buffer_insert_at_cursor(buff, gifheader->sender, -1);
 			gtk_text_buffer_insert_at_cursor(buff, "  :  ", -1);
 			gtk_text_buffer_insert_at_cursor(buff, gifdata, -1);
-			gdk_threads_leave();
 
 			// setting the color(blue) for client's name in the display text box
-			gdk_threads_enter();
 			line_no = gtk_text_buffer_get_line_count(buff);
 			gtk_text_buffer_get_iter_at_line(buff, &start, line_no);
 			gtk_text_buffer_get_iter_at_line_offset(buff, &end,
@@ -334,7 +293,6 @@ void gif_receive_messages(void *server)
 			                                  &start, &end);
 
 			gtk_text_buffer_insert_at_cursor(buff, "\n", -1);
-			gdk_threads_leave();
 
 			if((gifheader->length) != 0)
 				free(gifdata);
@@ -350,54 +308,37 @@ void gif_receive_messages(void *server)
 			{
 			case GIF_ERROR_LOGIN_INCORRECT:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO, "Login Incorrect");
-				gdk_threads_leave();
 				break;
 			}
 
 			case GIF_SUCCESS_ADD_CONTACTS:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO, "Your new contact has been successfully added");
-				gdk_threads_leave();
-
 				break;
 			}
 
 			case GIF_ERROR_ADD_CONTACTS:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"The contact id you entered does not belong to a gchat user");
-				gdk_threads_leave();
-
 				break;
 			}
 
 			case GIF_SUCCESS_DELETE_CONTACTS:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"Deleted. See the new list after you re-login");
-				gdk_threads_leave();
-
 				break;
 			}
 
 			case GIF_ERROR_DELETE_CONTACTS_NOT_A_CONTACT:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"1. The id you entered is not in your contact list");
-				gdk_threads_leave();
-
 				break;
 			}
 
 			case GIF_ERROR_DELETE_CONTACTS_NOT_A_MEMBER:
 			{
-				gdk_threads_enter();
 				message_dialog(GTK_MESSAGE_INFO,"2. The id you entered is not in your contact list");
-				gdk_threads_leave();
-
 				break;
 			}
 
@@ -419,64 +360,48 @@ void gif_receive_messages(void *server)
 			char *message;
 			offline_msgs_send_t *omsgs_se;
 
-			gdk_threads_enter();
 			GtkWidget *widget;
 			GtkListStore *store;
 			GtkTreeViewColumn *column;
 			GtkCellRenderer *renderer;
 			GtkTreeIter iter;
 			GdkPixbuf *img;
-			gdk_threads_leave();
 
 			if(gifheader->reserved == 1) //刷新联系人在线状态
 			{
 				offline_messages_count = 0;
 
 				//creating a model
-				gdk_threads_enter();
 				store = gtk_list_store_new(OFFLINE_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 				offline_temp_store = store;
-				gdk_threads_leave();
 
 				//creating a view
-				gdk_threads_enter();
 				offline_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
-				gdk_threads_leave();
 
 				//adding the view to the scrolledwindow
-				gdk_threads_enter();
 				gtk_container_add(GTK_CONTAINER(scrolledwindow4), offline_tree);
-				gdk_threads_leave();
 
 				//creating first column
-				gdk_threads_enter();
 				renderer = gtk_cell_renderer_pixbuf_new();
 				column = gtk_tree_view_column_new_with_attributes("New/Old", renderer, "pixbuf", OFFLINE_NEW_PIXMAP, NULL);
 				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
-				gdk_threads_leave();
 
 				//creating second column
-				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
 				g_object_set(G_OBJECT(renderer), "foreground", "red", NULL);
 				column = gtk_tree_view_column_new_with_attributes("From", renderer, "text", OFFLINE_SENDER_TEXT, NULL);
 				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
-				gdk_threads_leave();
 
 				//creating third column
-				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
 				g_object_set(G_OBJECT(renderer), "foreground", "dark green", NULL);
 				column = gtk_tree_view_column_new_with_attributes("Date & Time", renderer, "text",OFFLINE_DATESERIAL_TEXT, NULL);
 				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
-				gdk_threads_leave();
 
 				//creating fourth column
-				gdk_threads_enter();
 				renderer = gtk_cell_renderer_text_new();
 				column = gtk_tree_view_column_new_with_attributes("Message", renderer, "text", OFFLINE_MSG_TEXT, NULL);
 				gtk_tree_view_append_column(GTK_TREE_VIEW(offline_tree), column);
-				gdk_threads_leave();
 			}
 			else
                         {
@@ -490,10 +415,8 @@ void gif_receive_messages(void *server)
 			        (offline_msgs_send_t *) malloc(sizeof(offline_msgs_send_t));
 			while(counter < (gifheader->length))
 			{
-				gdk_threads_enter();
 				widget = lookup_widget(offline, "butOfflineDelete");
 				gtk_widget_set_sensitive(widget, TRUE);
-				gdk_threads_leave();
 
 				memcpy(omsgs_se, (gifdata + counter),
 				       sizeof(offline_msgs_send_t));
@@ -504,7 +427,6 @@ void gif_receive_messages(void *server)
 				counter = counter + (omsgs_se->length);
 
 				// setting the status image for online clients and offline clients
-				gdk_threads_enter();
 				if(omsgs_se->new == 1)
                                 {
                                         get_full_path_name(PATHNAME,"ok.png",1,"client/pixmaps");
@@ -515,10 +437,8 @@ void gif_receive_messages(void *server)
                                         get_full_path_name(PATHNAME,"kill.png",1,"client/pixmaps");
                                         img = gdk_pixbuf_new_from_file(PATHNAME, NULL);
                                 }
-				gdk_threads_leave();
 
 				//Acquire a child iterator
-				gdk_threads_enter();
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter,
 				                   OFFLINE_NEW_PIXMAP, img,
@@ -527,7 +447,6 @@ void gif_receive_messages(void *server)
 				                   OFFLINE_DATESERIAL_TEXT,
 				                   omsgs_se->dateserial,
 				                   OFFLINE_MSG_TEXT, message, -1);
-				gdk_threads_leave();
 
 				offline_messages_count++;
 
@@ -535,23 +454,19 @@ void gif_receive_messages(void *server)
 			}
 			free(omsgs_se);
 
-			gdk_threads_enter();
 			gtk_widget_show(offline_tree);
-			gdk_threads_leave();
 
 			if(gifheader->reserved == 1)
 			{
 				GtkTreeSelection *select;
 
 				// signal handling for "changed" event
-				gdk_threads_enter();
 				select =
 				        gtk_tree_view_get_selection(GTK_TREE_VIEW(offline_tree));
 				gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
 				g_signal_connect(G_OBJECT(select), "changed",
 				                 G_CALLBACK
 				                 (gif_select_offline_messages), NULL);
-				gdk_threads_leave();
 			}
 
 			if((gifheader->length) != 0)
@@ -575,15 +490,15 @@ GtkWidget* lookup_widget(GtkWidget *widget, const gchar *widget_name)
                 if (GTK_IS_MENU (widget))
                         parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
                 else
-                        parent = widget->parent;
+                        parent = gtk_widget_get_parent(widget);
                 if (!parent)
-                        parent = gtk_object_get_data (GTK_OBJECT (widget), "GladeParentKey");
+                        parent = g_object_get_data (G_OBJECT (widget), "GladeParentKey");
                 if (parent == NULL)
                         break;
                 widget = parent;
         }
 
-        found_widget = (GtkWidget*) gtk_object_get_data (GTK_OBJECT (widget),
+        found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget),
                         widget_name);
         if (!found_widget)
                 g_warning ("Widget not found: %s", widget_name);
@@ -593,23 +508,23 @@ GtkWidget* lookup_widget(GtkWidget *widget, const gchar *widget_name)
 /* This is an internally used function to create pixmaps. */
 GtkWidget* create_pixmap(GtkWidget *widget, const gchar *filename)
 {
-        GtkWidget *pixmap;
-        gchar *pathname;
+    GtkWidget *pixmap;
+    gchar *pathname = NULL;
 
-        if (!filename || !filename[0])
-                return gtk_image_new ();
+    if (!filename || !filename[0])
+        return gtk_image_new ();
 
-        pathname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                              filename, TRUE, NULL);
-        if (!pathname)
-        {
-                g_warning (_("Couldn't find pixmap file: %s"), filename);
-                return gtk_image_new ();
-        }
+    pathname = g_find_program_in_path(filename);
 
-        pixmap = gtk_image_new_from_file (pathname);
-        g_free (pathname);
-        return pixmap;
+    if (!pathname)
+    {
+        g_warning ("Couldn't find pixmap file: %s", filename);
+        return gtk_image_new ();
+    }
+
+    pixmap = gtk_image_new_from_file (pathname);
+    g_free (pathname);
+    return pixmap;
 }
 
 /* This is an internally used function to create pixmaps. */
